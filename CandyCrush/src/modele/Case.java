@@ -5,7 +5,6 @@
  */
 package modele;
 
-import View_Controller.Tool;
 import java.util.Observable;
 
 
