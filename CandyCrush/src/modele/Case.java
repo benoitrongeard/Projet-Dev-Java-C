@@ -5,6 +5,7 @@
  */
 package modele;
 
+import View_Controller.Tool;
 import java.util.Observable;
 
 
@@ -19,17 +20,17 @@ public class Case extends Observable{
     
     private int x,y;
     private boolean selected,marked;
+    private int nombreAlea;
     Grille g;
+    public Forme forme;
 
     public Case(int x, int y,Grille g) {
-        
-
         this.x = x;
         this.y = y;
         this.selected = false;
         this.marked = false;
-        
-        
+        nombreAlea = Tool.monRandom(0, 2);
+        forme = new Forme(nombreAlea);
     }
     
 
