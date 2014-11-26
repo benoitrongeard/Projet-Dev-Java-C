@@ -5,6 +5,11 @@
  */
 package candycrush;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import View_Controller.*;
+
 /**
  *
  * @author dualshote
@@ -14,9 +19,10 @@ public class CandyCrush {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        System.out.println("");
-        // TODO code application logic here
+    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        
+        MainView fenetre = new MainView();
     }
     
 }
