@@ -22,7 +22,7 @@ public class CandyCrush {
     public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         
-        MainView fenetre = new MainView();
+        MainView fenetre = new MainView(9,9);
     }
     
 }
