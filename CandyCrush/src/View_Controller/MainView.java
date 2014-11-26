@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package View_Controller;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
