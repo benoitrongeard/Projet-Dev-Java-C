@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modele;
+package Model;
 
 /**
  *
@@ -16,18 +16,14 @@ public class Grille {
     public Grille(int x, int y) {
         this.x = x;
         this.y = y;
-        t_case=new Case[x][y];
+        t_case = new Case[x][y];
     }
-    
- 
-    
+  
     public void build(){
         for(int i = 0; i < x; i++){
-            for(int j =0; j < y; j++){
-                Case c=new Case(x, y,this);
-                t_case[x][y]=c;
-                
-                
+            for(int j = 0; j < y; j++){
+                Case c = new Case(x, y,this);
+                t_case[x][y] = c;
             }
         }
     }

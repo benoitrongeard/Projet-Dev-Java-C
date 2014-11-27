@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modele;
+package Model;
 
 import java.util.Observable;
 
@@ -20,20 +20,19 @@ public class Case extends Observable{
     private int x,y;
     private boolean selected,marked;
     private int nombreAlea;
-    Grille g;
+    public Grille g;
     public Forme forme;
 
-    public Case(int x, int y,Grille g) {
+    public Case(int x, int y, Grille g) {
         this.x = x;
         this.y = y;
         this.selected = false;
         this.marked = false;
         nombreAlea = Tool.monRandom(0, 2);
         forme = new Forme(nombreAlea);
+        this.g = g;
     }
-    
-
-    
+   
     public int getX() {
         return x;
     }
@@ -41,8 +40,6 @@ public class Case extends Observable{
     public int getY() {
         return y;
     }
-
-
 
     public boolean isSelected() {
         return selected;
