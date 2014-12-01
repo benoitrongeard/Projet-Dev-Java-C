@@ -52,12 +52,4 @@ public class Case extends Observable{
     public Forme getForme(){
         return maForme;
     }
-    
-
-
-    
-    
-    
-    
-    
 }

@@ -27,7 +27,7 @@ public class Forme {
             case 2: this.c = Color.red;
                 this.numColor = 2;
                 break;
-            default: this.c = Color.black;
+            default: this.c = Color.green;
                 this.numColor = 0;
                 break;
         }

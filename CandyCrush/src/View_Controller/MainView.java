@@ -5,11 +5,13 @@
  */
 package View_Controller;
 import Model.Case;
-import Model.Forme;
 import Model.Grille;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -40,10 +42,9 @@ public class MainView extends JFrame{
         partie.add(nouvellePartie);
         menu.add(partie);
         
-        
         /*  Fenetre de droite   */
         JPanel jpDroite = new JPanel();
-        jpDroite.setBackground(Color.yellow);
+        //jpDroite.setBackground(Color.yellow);
         jpDroite.setPreferredSize(new Dimension(130,498));
         
         /*  Bouton fenetre de droite    */
@@ -58,22 +59,7 @@ public class MainView extends JFrame{
         JPanel jpGrille = new JPanel(new GridLayout(height,width));
         jpGrille.setPreferredSize(new Dimension(500,500));
         Grille grille = new Grille(height, width);
-        for(int i = 0; i < width; i++){
-            for(int j =0; j < height; j++){
-                Case maCase = new Case(i,j,grille);
-                CaseGrille maCaseGrille = new CaseGrille(maCase.getForme());
-                maCase.addObserver(maCaseGrille);
-                
-//                Random rand = new Random();
-//                float r = rand.nextFloat();
-//                float g = rand.nextFloat();
-//                float b = rand.nextFloat();
-//                Color randomColor = new Color(r, g, b);
-//                
-                jpGrille.add(maCaseGrille);
-            }
-        }
-        
+        initialisation(width, height, grille, jpGrille);
         
         
         /*  Affichage   */
@@ -91,7 +77,30 @@ public class MainView extends JFrame{
                             .addComponent(jpDroite, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
         
+        
+        /*  Action sur le menu  */
+        nouvellePartie.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                initialisation(width, height, grille, jpGrille);
+                System.out.println("Partie renitialisée");
+            }
+        });
+        
         this.setJMenuBar(menu);
         this.setVisible(true);
+    }
+    
+    
+    public void initialisation(int width, int height,Grille grille, JPanel jpGrille){
+        for(int i = 0; i < width; i++){
+            for(int j =0; j < height; j++){
+                Case maCase = new Case(i,j,grille);
+                CaseGrille maCaseGrille = new CaseGrille(maCase.getForme());
+                maCase.addObserver(maCaseGrille);
+                maCaseGrille.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+                jpGrille.add(maCaseGrille);
+            }
+        }
     }
 }
