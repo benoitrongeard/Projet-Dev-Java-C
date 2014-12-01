@@ -37,6 +37,10 @@ public class Forme {
         return numColor;
     }
     
+    public Color getCoueleur(){
+        return c;
+    }
+    
     public boolean equals(Forme forme){
         if(this.numColor == forme.getForme()){
             return true;

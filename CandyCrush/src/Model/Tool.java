@@ -5,17 +5,16 @@
  */
 package Model;
 
+import java.util.Random;
+
 /**
  *
  * @author Neo
  */
 public class Tool {
-
-    public static int monRandom(int max ,int min){
-        int n=(int)(Math.random() * (max-min)) + min;
-        
-        return n;
+ 
+    public static int monRandom(int min, int max){
+        Random rand = new Random();
+        return rand.nextInt(max - min + 1) + min;
     }
-
-    
 }

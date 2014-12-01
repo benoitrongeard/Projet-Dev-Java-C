@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 package View_Controller;
+import Model.Case;
+import Model.Forme;
+import Model.Grille;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.util.Random;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -55,18 +57,20 @@ public class MainView extends JFrame{
         /*  Grille  */
         JPanel jpGrille = new JPanel(new GridLayout(height,width));
         jpGrille.setPreferredSize(new Dimension(500,500));
+        Grille grille = new Grille(height, width);
         for(int i = 0; i < width; i++){
             for(int j =0; j < height; j++){
-                Random rand = new Random();
-                float r = rand.nextFloat();
-                float g = rand.nextFloat();
-                float b = rand.nextFloat();
-                Color randomColor = new Color(r, g, b);
+                Case maCase = new Case(i,j,grille);
+                CaseGrille maCaseGrille = new CaseGrille(maCase.getForme());
+                maCase.addObserver(maCaseGrille);
                 
-                JPanel panel = new JPanel();
-                panel.setBackground(randomColor);
-
-                jpGrille.add(panel);
+//                Random rand = new Random();
+//                float r = rand.nextFloat();
+//                float g = rand.nextFloat();
+//                float b = rand.nextFloat();
+//                Color randomColor = new Color(r, g, b);
+//                
+                jpGrille.add(maCaseGrille);
             }
         }
         

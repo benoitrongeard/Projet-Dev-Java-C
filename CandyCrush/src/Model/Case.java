@@ -21,15 +21,15 @@ public class Case extends Observable{
     private boolean selected,marked;
     private int nombreAlea;
     public Grille g;
-    public Forme forme;
+    private Forme maForme;
 
     public Case(int x, int y, Grille g) {
         this.x = x;
         this.y = y;
         this.selected = false;
         this.marked = false;
-        nombreAlea = Tool.monRandom(0, 2);
-        forme = new Forme(nombreAlea);
+        nombreAlea = Tool.monRandom(0, 3);
+        maForme = new Forme(nombreAlea);
         this.g = g;
     }
    
@@ -49,6 +49,9 @@ public class Case extends Observable{
         return marked;
     }
     
+    public Forme getForme(){
+        return maForme;
+    }
     
 
 
