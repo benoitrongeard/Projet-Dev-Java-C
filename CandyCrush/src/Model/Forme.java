@@ -45,6 +45,9 @@ public class Forme {
     }
     
     public boolean equals(Forme forme){
+        if(forme == null){
+            return false;
+        }
         if(this.numColor == forme.getForme()){
             return true;
         }
