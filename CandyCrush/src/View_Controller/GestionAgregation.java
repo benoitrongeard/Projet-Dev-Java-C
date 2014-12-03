@@ -17,7 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author dualshote
  */
-public class GestionAgregation {
+public class GestionAgregation extends java.lang.Thread{
     
     public static int nombreDeThread = 0;
     public static Lock mutex = new ReentrantLock();
