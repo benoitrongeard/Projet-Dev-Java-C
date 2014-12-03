@@ -5,6 +5,7 @@
  */
 package Model;
 
+import java.awt.Color;
 import java.util.Observable;
 
 
@@ -17,10 +18,10 @@ import java.util.Observable;
 
 public class Case extends Observable{
     
-    private int x,y;
+    private final int x,y;
     private boolean selected,marked;
     private int nombreAlea;
-    public Grille g;
+    public Grille maGrille;
     private Forme maForme;
 
     public Case(int x, int y, Grille g) {
@@ -30,9 +31,28 @@ public class Case extends Observable{
         this.marked = false;
         nombreAlea = Tool.monRandom(0, 3);
         maForme = new Forme(nombreAlea);
-        this.g = g;
+        this.maGrille = g;
     }
    
+    public void regenerer(){
+        nombreAlea = Tool.monRandom(0, 3);
+        maForme = new Forme(nombreAlea);
+        setChanged();   //A faire pour prévenir l'observer avant d'appliquer notify
+        notifyObservers();
+    }
+    
+    public void regenerer(Case maCase){
+        this.maForme = maCase.getForme();
+        setChanged();   //A faire pour prévenir l'observer avant d'appliquer notify
+        notifyObservers();
+    }
+    
+    public void changeForme(Forme maForme){
+        this.maForme = maForme;
+        setChanged();
+        notifyObservers();
+    }
+    
     public int getX() {
         return x;
     }
@@ -41,6 +61,10 @@ public class Case extends Observable{
         return y;
     }
 
+    public Grille getGrille(){
+        return this.maGrille;
+    }
+    
     public boolean isSelected() {
         return selected;
     }
@@ -51,5 +75,17 @@ public class Case extends Observable{
     
     public Forme getForme(){
         return maForme;
+    }
+    
+    public Color getCouleurForme(){
+        return this.maForme.getCouleur();
+    }
+    
+    public int getNumCouleurForme(){
+        return this.maForme.getForme();
+    }
+    
+    public boolean equals(Case c){
+        return this.maForme.equals(c.getForme());
     }
 }

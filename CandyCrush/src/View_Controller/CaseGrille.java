@@ -5,6 +5,7 @@
  */
 package View_Controller;
 
+import Model.Case;
 import Model.Forme;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
@@ -19,41 +20,32 @@ import javax.swing.JPanel;
  */
 public class CaseGrille extends JPanel implements Observer{
     
-    public CaseGrille(Forme forme){
-        
-        this.addMouseListener(new MouseListener() {
-            
-            @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                System.out.println("Case cliqué");
-                CaseGrille.this.setBackground(Color.PINK);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent mouseEvent) {
-            }
-        }); 
-        
-        this.setBackground(forme.getCoueleur());
+    public int x;
+    public int y;
+    
+    public CaseGrille(){
+        this.x = 0;
+        this.y = 0;
     }
     
+    public void initialisation(int x, int y, Forme maForme){
+        this.x = x;
+        this.y = y;
+        this.setBackground(maForme.getCouleur());
+    }
     
 
     @Override
     public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(o instanceof Case){
+            Case maCase = (Case)o;
+            if(maCase.getForme() != null){
+                this.setBackground(maCase.getCouleurForme());
+            }
+            else{
+                this.setBackground(Color.white);
+            }
+        }
     }
     
 }

@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -28,26 +29,27 @@ public class MainView extends JFrame{
     
     
     public MainView(int width, int height){
-        /*  Fenetre */
+        /*  --------- Paramètres --------- */
         this.setTitle("CandyCrush Party");
         this.setSize(630,545);
+        this.setLocationRelativeTo(null);
         //this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         
-        /*  Menu  */
+        /*  --------- Menu --------- */
         JMenuBar menu = new JMenuBar();
         JMenu partie = new JMenu("Partie");
         JMenuItem nouvellePartie = new JMenuItem("Nouvelle partie");
         partie.add(nouvellePartie);
         menu.add(partie);
         
-        /*  Fenetre de droite   */
+        /*  --------- Fenetre de droite --------- */
         JPanel jpDroite = new JPanel();
         //jpDroite.setBackground(Color.yellow);
         jpDroite.setPreferredSize(new Dimension(130,498));
         
-        /*  Bouton fenetre de droite    */
+        /*  --------- Bouton sur la fenêtre de droite --------- */
         JButton JB1 = new JButton();
         JButton JB2 = new JButton();
         JButton JB3 = new JButton();
@@ -55,14 +57,14 @@ public class MainView extends JFrame{
         jpDroite.add(JB2);
         jpDroite.add(JB3);
         
-        /*  Grille  */
+        /*  --------- Grille, fenêtre de gauche --------- */
         JPanel jpGrille = new JPanel(new GridLayout(height,width));
         jpGrille.setPreferredSize(new Dimension(500,500));
         Grille grille = new Grille(height, width);
-        initialisation(width, height, grille, jpGrille);
+        initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille));
         
         
-        /*  Affichage   */
+        /*  --------- Gestion affichage --------- */
         GroupLayout groupeLayout = new GroupLayout(this.getContentPane());
         this.setLayout(groupeLayout);
         groupeLayout.setHorizontalGroup(
@@ -78,11 +80,11 @@ public class MainView extends JFrame{
         );
         
         
-        /*  Action sur le menu  */
+        /*  --------- Action sur le menu --------- */
         nouvellePartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                initialisation(width, height, grille, jpGrille);
+                initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille));
                 System.out.println("Partie renitialisée");
             }
         });
@@ -92,13 +94,16 @@ public class MainView extends JFrame{
     }
     
     
-    public void initialisation(int width, int height,Grille grille, JPanel jpGrille){
+    /*  --------- Fonction pour initialiser la grille de jeu --------- */
+    public void initialisation(int width, int height,Grille grille, JPanel jpGrille, MouseListener monMouseListener){
         for(int i = 0; i < width; i++){
             for(int j =0; j < height; j++){
                 Case maCase = new Case(i,j,grille);
-                CaseGrille maCaseGrille = new CaseGrille(maCase.getForme());
+                CaseGrille maCaseGrille = new CaseGrille();
+                maCaseGrille.initialisation(maCase.getX(), maCase.getY(), maCase.getForme());
                 maCase.addObserver(maCaseGrille);
                 maCaseGrille.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+                maCaseGrille.addMouseListener(monMouseListener);
                 jpGrille.add(maCaseGrille);
             }
         }

@@ -13,8 +13,8 @@ import java.awt.Color;
  */
 public class Forme {
     
-    Color c;
-    int numColor;
+    private Color c;
+    private int numColor;
     
     public Forme(int numeroAleatoire){
         switch(numeroAleatoire){
@@ -27,6 +27,9 @@ public class Forme {
             case 2: this.c = Color.red;
                 this.numColor = 2;
                 break;
+            case 3: this.c = Color.green;
+                this.numColor = 2;
+                break;
             default: this.c = Color.green;
                 this.numColor = 0;
                 break;
@@ -37,7 +40,7 @@ public class Forme {
         return numColor;
     }
     
-    public Color getCoueleur(){
+    public Color getCouleur(){
         return c;
     }
     
