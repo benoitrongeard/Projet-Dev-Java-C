@@ -5,6 +5,7 @@
  */
 package Model;
 
+import View_Controller.GestionAgregation;
 import java.awt.Color;
 import java.util.Observable;
 
@@ -110,97 +111,7 @@ public class Case extends Observable{
     }
     
     public int aggregation(){
-        int nbCaseDroite, nbCaseGauche, nbCaseHaut, nbCaseBas;
-        int point = 0;
-        
-        //On parcour les cases à droite
-        nbCaseDroite = 0;
-        for(int i = this.x+1; i < maGrille.getLargeur(); i++){
-            if(maGrille.getCase(i, this.y).getForme() == null){
-                break;
-            }
-            if(maGrille.getCase(i, this.y).getForme().equals(this.maForme)){
-                nbCaseDroite++;
-            }
-            else{
-                break;
-            }
-        }
-        
-        
-        //On parcour les cases à gauche
-        nbCaseGauche = 0;
-        for(int i = this.x-1; i >= 0; i--){
-            if(maGrille.getCase(i, this.y).getForme() == null){
-                break;
-            }
-            if(maGrille.getCase(i, this.y).getForme().equals(this.maForme)){
-                nbCaseGauche++;
-            }
-            else{
-                break;
-            }
-        }
-        
-        //On parcour les cases du bas
-        nbCaseBas = 0;
-        for(int i = this.y+1; i < maGrille.getHauteur(); i++){
-            if(maGrille.getCase(this.x, i).getForme() == null){
-                break;
-            }
-            if(maGrille.getCase(this.x, i).getForme().equals(this.maForme)){
-                nbCaseBas++;
-            }
-            else{
-                break;
-            }
-            
-        }
-        
-        //On parcour les cases du haut
-        nbCaseHaut = 0;
-        for(int i = this.y-1; i >= 0; i--){
-            if(maGrille.getCase(this.x, i).getForme() == null){
-                break;
-            }
-            if(maGrille.getCase(this.x, i).getForme().equals(this.maForme)){
-                nbCaseHaut++;
-            }
-            else{
-                break;
-            }
-        }
-        
-        System.out.println("nombre a gauche : " + nbCaseGauche);
-        System.out.println("nombre a droite : " + nbCaseDroite);
-        System.out.println("nombre a haut : " + nbCaseHaut);
-        System.out.println("nombre a bas : " + nbCaseBas);
-        
-        if((nbCaseDroite + nbCaseGauche + 1) >= 3){
-            for(int i = this.x - nbCaseGauche; i < (this.x + nbCaseDroite+1); i++){
-                maGrille.getCase(i, this.y).setForme(null);
-            }
-            point += (nbCaseDroite + nbCaseGauche);
-        }
-        else{
-            nbCaseDroite = 0;
-            nbCaseGauche = 0;
-        }
-        if((nbCaseHaut + nbCaseBas + 1) >= 3){
-            for(int i = this.y - nbCaseHaut; i < (this.y + nbCaseBas+1); i++){
-                maGrille.getCase(this.x, i).setForme(null);
-            }
-            point += (nbCaseHaut + nbCaseBas);
-        }
-        
-        /*if(point > 0){
-            new UpdateGravity(this).start();
-            for(int i = this.x - nbCaseGauche; i < (this.x + nbCaseDroite + 1); i++){
-                if(i != this.x){
-                    new UpdateGravity(maGrille.getCase(i, this.y)).start();
-                }
-            }
-        }*/
-        return point;
+        new GestionAgregation(this).start();
+        return 1;
     }
 }

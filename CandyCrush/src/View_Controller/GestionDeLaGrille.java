@@ -49,7 +49,7 @@ public class GestionDeLaGrille implements MouseListener{
             maCase2.setForme(formeTmp);
             
             int pointsAdd = maCase1.aggregation();
-            //pointsAdd +=  maCase2.aggregation();
+            pointsAdd +=  maCase2.aggregation();
             
             if(pointsAdd > 0){
                 point += pointsAdd;

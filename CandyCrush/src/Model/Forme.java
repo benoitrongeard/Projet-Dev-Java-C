@@ -28,10 +28,10 @@ public class Forme {
                 this.numColor = 2;
                 break;
             case 3: this.c = Color.green;
-                this.numColor = 2;
+                this.numColor = 3;
                 break;
             default: this.c = Color.green;
-                this.numColor = 0;
+                this.numColor = 3;
                 break;
         }
     }
