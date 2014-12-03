@@ -34,9 +34,10 @@ public class Case extends Observable{
         this.maGrille = g;
     }
    
+    //permet de regenerer une couleur aleatoire
     public void regenerer(){
-        nombreAlea = Tool.monRandom(0, 3);
-        maForme = new Forme(nombreAlea);
+        this.nombreAlea = Tool.monRandom(0, 3);
+        this.maForme = new Forme(nombreAlea);
         setChanged();   //A faire pour prévenir l'observer avant d'appliquer notify
         notifyObservers();
     }

@@ -46,6 +46,10 @@ public class Grille {
         return null;
     }
     
+    public void setCase(Case maCase){
+        this.t_case[maCase.getY()][maCase.getX()] = maCase;
+    }
+    
     public Case[][] getTabCase(){
         return t_case;
     }

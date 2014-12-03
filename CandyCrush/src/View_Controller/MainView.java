@@ -96,9 +96,10 @@ public class MainView extends JFrame{
     
     /*  --------- Fonction pour initialiser la grille de jeu --------- */
     public void initialisation(int width, int height,Grille grille, JPanel jpGrille, MouseListener monMouseListener){
-        for(int i = 0; i < width; i++){
-            for(int j =0; j < height; j++){
+        for(int j = 0; j < height; j++){
+            for(int i =0; i < width; i++){
                 Case maCase = new Case(i,j,grille);
+                grille.setCase(maCase);
                 CaseGrille maCaseGrille = new CaseGrille();
                 maCaseGrille.initialisation(maCase.getX(), maCase.getY(), maCase.getForme());
                 maCase.addObserver(maCaseGrille);

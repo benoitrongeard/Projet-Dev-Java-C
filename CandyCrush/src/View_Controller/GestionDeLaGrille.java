@@ -5,6 +5,7 @@
  */
 package View_Controller;
 
+import Model.Case;
 import Model.Grille;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -15,10 +16,10 @@ import java.awt.event.MouseListener;
  */
 public class GestionDeLaGrille implements MouseListener{
     
-    
+    private Grille maGrille;
     
     public GestionDeLaGrille(Grille maGrille){
-        
+        this.maGrille = maGrille;
     }
 
     @Override
@@ -32,6 +33,12 @@ public class GestionDeLaGrille implements MouseListener{
     @Override
     public void mouseReleased(MouseEvent e) {
         System.out.println("bonjour");
+        CaseGrille maCaseGrille = (CaseGrille) e.getSource();
+        System.out.println("x = " + maCaseGrille.getXPosition());
+        System.out.println("y = " + maCaseGrille.getYPosition());
+        Case maCase = maGrille.getCase(maCaseGrille.getXPosition(), maCaseGrille.getYPosition());
+        System.out.println(maCase);
+        maCase.regenerer();
     }
 
     @Override

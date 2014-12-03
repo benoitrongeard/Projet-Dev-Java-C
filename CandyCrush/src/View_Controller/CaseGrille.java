@@ -34,6 +34,13 @@ public class CaseGrille extends JPanel implements Observer{
         this.setBackground(maForme.getCouleur());
     }
     
+    public int getXPosition(){
+        return this.x;
+    }
+    
+    public int getYPosition(){
+        return this.y;
+    }
 
     @Override
     public void update(Observable o, Object arg) {
@@ -47,5 +54,7 @@ public class CaseGrille extends JPanel implements Observer{
             }
         }
     }
+    
+    
     
 }
