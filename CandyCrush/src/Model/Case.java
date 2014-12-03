@@ -126,7 +126,6 @@ public class Case extends Observable{
                 break;
             }
         }
-        System.out.println(this.maForme);
         
         
         //On parcour les cases à gauche
@@ -171,6 +170,11 @@ public class Case extends Observable{
                 break;
             }
         }
+        
+        System.out.println("nombre a gauche : " + nbCaseGauche);
+        System.out.println("nombre a droite : " + nbCaseDroite);
+        System.out.println("nombre a haut : " + nbCaseHaut);
+        System.out.println("nombre a bas : " + nbCaseBas);
         
         if((nbCaseDroite + nbCaseGauche + 1) >= 3){
             for(int i = this.x - nbCaseGauche; i < (this.x + nbCaseDroite+1); i++){
