@@ -21,8 +21,8 @@ public class GestionDeLaGravite extends java.lang.Thread{
     public static int nombreDeThread = 0;
     public static Lock mutex = new ReentrantLock();
     
-    private static final Set<Case> setCaseMajAgreg = Collections.synchronizedSet(new HashSet());
-    private final Case maCase;
+    private static Set<Case> setCaseMajAgreg = Collections.synchronizedSet(new HashSet());
+    private Case maCase;
     
     public GestionDeLaGravite(Case maCase){
         this.maCase = maCase;
@@ -66,8 +66,8 @@ public class GestionDeLaGravite extends java.lang.Thread{
         mutex.lock();
         nombreDeThread--;
         if(nombreDeThread == 0){
-            for(Case c : setCaseMajAgreg){
-                new GestionAgregation(c).start();
+            for(Case maCase : setCaseMajAgreg){
+                new GestionAgregation(maCase).start();
             }
             setCaseMajAgreg.clear();
             mutex.unlock();

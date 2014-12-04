@@ -38,13 +38,14 @@ public class GestionAgregation extends java.lang.Thread{
         nombreDeThread--;
         if(nombreDeThread == 0){
             for(Case c : setCaseMajGrav){
-                new GestionDeLaGravite(c).start();
+               // new GestionDeLaGravite(c).start();
             }
             setCaseMajGrav.clear();
         }
     }
     
     @SuppressWarnings("empty-statement")
+    @Override
     public void run(){
         if(maCase != null && maCase.getForme() != null){
             incrementThread();
