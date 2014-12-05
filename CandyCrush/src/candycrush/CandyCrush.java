@@ -30,21 +30,5 @@ public class CandyCrush {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         
         MainView fenetre = new MainView(9,9);
-//        Grille g = new Grille(8,8);
-//        Case c1 = new Case(1,2,g);
-//        Case c2 = new Case(2,3,g);
-//        
-//        System.out.println(c1.getCouleurForme());
-//        System.out.println(c1.getNumCouleurForme());
-//        System.out.println(c2.getCouleurForme());
-//        System.out.println(c2.getNumCouleurForme());
-//        
-//        
-//        if(c1.equals(c2)){
-//            System.out.println("vrai");
-//        }
-//        else{
-//            System.out.println("false");
-//        }
     }
 }

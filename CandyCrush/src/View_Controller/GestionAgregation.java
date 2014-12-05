@@ -7,6 +7,7 @@ package View_Controller;
 
 import Model.Case;
 import Model.Grille;
+import Model.Score;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,27 +21,35 @@ import java.util.concurrent.locks.ReentrantLock;
 public class GestionAgregation extends java.lang.Thread{
     
     public static int nombreDeThread = 0;
-    public static Lock mutex = new ReentrantLock();
-    private static Set<Case> setCaseMajGrav = Collections.synchronizedSet(new HashSet());
-
-    
-    private Case maCase;
+    public static boolean modifG = false; // True si l'utilisateur marque des point (modifie la grille)
+    private static Score score = null;
+    private final Case maCase;
     
     public GestionAgregation(Case maCase){
         this.maCase = maCase;
+    }
+    
+    public static void setScore(Score score){
+        GestionAgregation.score = score;
+    }
+    
+    public static void addPoints(int points){
+        if(score != null){
+            GestionAgregation.score.addPoints(points);
+        }
     }
     
     public static synchronized void incrementThread(){
         nombreDeThread++;
     }
     
-    public static synchronized void decrementThread(){
+    public static synchronized void decrementThread(Grille g){
         nombreDeThread--;
-        if(nombreDeThread == 0){
-            for(Case c : setCaseMajGrav){
-               // new GestionDeLaGravite(c).start();
+        if(nombreDeThread == 0 && g != null && modifG){
+            modifG = false;
+            for(int i=0; i < g.getLargeur(); i++){
+                    new GestionDeLaGravite(i, g).start();
             }
-            setCaseMajGrav.clear();
         }
     }
     
@@ -95,12 +104,11 @@ public class GestionAgregation extends java.lang.Thread{
                     else{
                         break;
                     }
-
                 }
 
                 //On parcour les cases du haut
                 nbCaseHaut = 0;
-                for(int i = maCase.getY(); i >= 0; i--){
+                for(int i = maCase.getY()-1; i >= 0; i--){
                     if(maGrille.getCase(maCase.getX(), i).getForme() == null){
                         break;
                     }
@@ -112,6 +120,10 @@ public class GestionAgregation extends java.lang.Thread{
                     }
                 }
 
+//                System.out.println("-- Haut : " + nbCaseHaut + " Bas : " + nbCaseBas);
+//                System.out.println("   Droite : " + nbCaseDroite + " Gauche : " + nbCaseGauche);
+                
+                
                 if((nbCaseDroite + nbCaseGauche + 1) >= 3){
                     for(int i = maCase.getX() - nbCaseGauche; i < (maCase.getX() + nbCaseDroite+1); i++){
                         maGrille.getCase(i, maCase.getY()).setForme(null);
@@ -129,17 +141,14 @@ public class GestionAgregation extends java.lang.Thread{
                     point += (nbCaseHaut + nbCaseBas);
                 }
                 
+               
+                
                 if(point > 0){
-                    setCaseMajGrav.add(maCase);
-                    
-                    for(int j = maCase.getX() - nbCaseGauche; j < (maCase.getX() + nbCaseDroite + 1); j++){
-                        if(j != maCase.getX()){
-                            setCaseMajGrav.add(maGrille.getCase(j, maCase.getY()));
-                        }
-                    }
+                    GestionAgregation.addPoints(point);
+                    modifG = true;
                 }
             }
-            decrementThread();
+            decrementThread(maCase.getGrille());
         }
     }
 }

@@ -10,8 +10,7 @@ import Model.Grille;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+
 
 /**
  *
@@ -19,61 +18,65 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class GestionDeLaGravite extends java.lang.Thread{
     public static int nombreDeThread = 0;
-    public static Lock mutex = new ReentrantLock();
     
     private static Set<Case> setCaseMajAgreg = Collections.synchronizedSet(new HashSet());
-    private Case maCase;
+    private Grille grille;
+    private int numColonne = 0;
     
-    public GestionDeLaGravite(Case maCase){
-        this.maCase = maCase;
+    public GestionDeLaGravite(int numColonne, Grille grille){
+        this.numColonne = numColonne;
+        this.grille = grille;
+    }
+    
+    public static synchronized void incrementThread(){
+        nombreDeThread++;
+    }
+    
+    public static synchronized void decrementThread(){
+        nombreDeThread--;
+        if(nombreDeThread == 0){
+            for(Case c : setCaseMajAgreg){
+//                try {
+//                    sleep(10);
+//                } catch (InterruptedException ex) {
+//                    Logger.getLogger(GestionDeLaGravite.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+               new GestionAgregation(c).start();
+            }
+            setCaseMajAgreg.clear();
+        }
     }
     
     @Override
     @SuppressWarnings("empty-statement")
     public void run(){
-        mutex.lock();
-        try{
-            nombreDeThread++;
-        }
-        finally{
-            mutex.unlock();
-        }
-        
-        synchronized(maCase.getGrille()){
-            Grille maGrille = maCase.getGrille();
-            int numCaseDepart;
-            for(numCaseDepart = maCase.getY(); numCaseDepart < maGrille.getHauteur(); numCaseDepart++);
-            if(numCaseDepart != 0){
-                numCaseDepart--;
-            }
-            for(int i = numCaseDepart; i >= 0; i--){
-                setCaseMajAgreg.add(maGrille.getCase(maCase.getX(), i));
-            }
-            
-            Case startCase = maGrille.getCase(maCase.getX(), numCaseDepart);
-            for(int i = numCaseDepart; i >= 0; i--){
-                Case temporaireCase = maGrille.getCase(maCase.getX(), i);
-                startCase.regenerer(temporaireCase);
-                temporaireCase.setForme(null);
-                int j;
-                for(j = numCaseDepart; j >= i; j--){
-                    startCase = maGrille.getCase(maCase.getX(), j);
-                    numCaseDepart = j;
+        incrementThread();
+            synchronized(grille){
+                int numCaseDepart = 0;
+                for(numCaseDepart = grille.getHauteur()-1; numCaseDepart >= 0 && grille.getCase(numColonne, numCaseDepart).getForme() != null; numCaseDepart--);
+                System.out.println("Colonne : " + numColonne + "  Case Y : " + numCaseDepart);
+                if(numCaseDepart != -1){ // Si -1, il n'y a pas de case vide sur cette colonne, donc pas de gravité à vérifier
+                    Case startCase = grille.getCase(numColonne, numCaseDepart);
+                    for(int i = numCaseDepart; i >= 0; i--){
+                        Case temporaireCase = grille.getCase(numColonne, i);
+                        setCaseMajAgreg.add(temporaireCase);
+                        if(temporaireCase.getForme() != null){
+                            startCase.regenerer(temporaireCase);
+                            temporaireCase.setForme(null);
+                            numCaseDepart--;
+                            startCase = grille.getCase(numColonne, numCaseDepart);
+                        }
+                    }
+                    for(int i=numCaseDepart; i >= 0; i--){
+                        Case temporaireCase = grille.getCase(numColonne, i);
+                        temporaireCase.regenerer();
+                        setCaseMajAgreg.add(temporaireCase);
+                    }
                 }
+
+                
+                
             }
-        }
-        
-        mutex.lock();
-        nombreDeThread--;
-        if(nombreDeThread == 0){
-            for(Case maCase : setCaseMajAgreg){
-                new GestionAgregation(maCase).start();
-            }
-            setCaseMajAgreg.clear();
-            mutex.unlock();
-        }
-        else{
-            mutex.unlock();
-        }
+        decrementThread();
     }
 }

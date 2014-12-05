@@ -6,6 +6,7 @@
 package View_Controller;
 import Model.Case;
 import Model.Grille;
+import Model.Score;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -26,7 +27,7 @@ import javax.swing.JPanel;
  * @author dualshote
  */
 public class MainView extends JFrame{
-    
+    private ScoreLab scoreLab = new ScoreLab();
     
     public MainView(int width, int height){
         /*  --------- Paramètres --------- */
@@ -53,9 +54,11 @@ public class MainView extends JFrame{
         JButton JB1 = new JButton();
         JButton JB2 = new JButton();
         JButton JB3 = new JButton();
+        jpDroite.add(scoreLab);
         jpDroite.add(JB1);
         jpDroite.add(JB2);
         jpDroite.add(JB3);
+        
         
         /*  --------- Grille, fenêtre de gauche --------- */
         JPanel jpGrille = new JPanel(new GridLayout(height,width));
@@ -84,7 +87,7 @@ public class MainView extends JFrame{
         nouvellePartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille));
+                //initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille));
                 System.out.println("Partie renitialisée");
             }
         });
@@ -96,6 +99,7 @@ public class MainView extends JFrame{
     
     /*  --------- Fonction pour initialiser la grille de jeu --------- */
     public void initialisation(int width, int height,Grille grille, JPanel jpGrille, MouseListener monMouseListener){
+        
         for(int j = 0; j < height; j++){
             for(int i =0; i < width; i++){
                 Case maCase = new Case(i,j,grille);
@@ -108,5 +112,14 @@ public class MainView extends JFrame{
                 jpGrille.add(maCaseGrille);
             }
         }
+        
+        for(int j = 0; j < height; j++){
+            for(int i =0; i < width; i++){
+                grille.getCase(i, j).aggregation();
+            }
+        }
+        Score score = new Score();
+        score.addObserver(this.scoreLab);
+        GestionAgregation.setScore(score);
     }
 }

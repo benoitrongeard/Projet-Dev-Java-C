@@ -5,6 +5,7 @@
  */
 package View_Controller;
 
+import Model.Score;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JLabel;
@@ -13,15 +14,16 @@ import javax.swing.JLabel;
  *
  * @author dualshote
  */
-public class Score extends JLabel implements Observer{
+public class ScoreLab extends JLabel implements Observer{
 
-    public Score(){
-        
+    public ScoreLab(){
     }
     
     @Override
     public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(o instanceof Score){
+            this.setText(((Score)o).toString());
+        }
     }
     
 }
