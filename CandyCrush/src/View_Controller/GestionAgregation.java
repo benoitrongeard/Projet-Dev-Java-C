@@ -8,11 +8,6 @@ package View_Controller;
 import Model.Case;
 import Model.Grille;
 import Model.Score;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -24,9 +19,11 @@ public class GestionAgregation extends java.lang.Thread{
     public static boolean modifG = false; // True si l'utilisateur marque des point (modifie la grille)
     private static Score score = null;
     private final Case maCase;
+    private static boolean init;
     
-    public GestionAgregation(Case maCase){
+    public GestionAgregation(Case maCase, boolean init){
         this.maCase = maCase;
+        this.init = init;
     }
     
     public static void setScore(Score score){
@@ -34,8 +31,10 @@ public class GestionAgregation extends java.lang.Thread{
     }
     
     public static void addPoints(int points){
-        if(score != null){
-            GestionAgregation.score.addPoints(points);
+        if(init != true){
+            if(score != null){
+                GestionAgregation.score.addPoints(points);
+            }
         }
     }
     
@@ -48,7 +47,12 @@ public class GestionAgregation extends java.lang.Thread{
         if(nombreDeThread == 0 && g != null && modifG){
             modifG = false;
             for(int i=0; i < g.getLargeur(); i++){
-                    new GestionDeLaGravite(i, g).start();
+                if(init == true){
+                    new GestionDeLaGravite(i, g, init).start();
+                }
+                else{
+                    new GestionDeLaGravite(i, g, false).start();
+                }
             }
         }
     }
@@ -56,6 +60,12 @@ public class GestionAgregation extends java.lang.Thread{
     @SuppressWarnings("empty-statement")
     @Override
     public void run(){
+//        if(init){
+//            System.out.println("INITIALISATION");
+//        }
+//        else{
+//            System.out.println("PAS INITIALISATION");
+//        }
         if(maCase != null && maCase.getForme() != null){
             incrementThread();
             synchronized(maCase.getGrille()){

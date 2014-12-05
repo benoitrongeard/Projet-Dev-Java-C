@@ -10,6 +10,8 @@ import Model.Grille;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -22,10 +24,12 @@ public class GestionDeLaGravite extends java.lang.Thread{
     private static Set<Case> setCaseMajAgreg = Collections.synchronizedSet(new HashSet());
     private Grille grille;
     private int numColonne = 0;
+    private static boolean init;
     
-    public GestionDeLaGravite(int numColonne, Grille grille){
+    public GestionDeLaGravite(int numColonne, Grille grille, boolean init){
         this.numColonne = numColonne;
         this.grille = grille;
+        this.init = init;
     }
     
     public static synchronized void incrementThread(){
@@ -37,11 +41,16 @@ public class GestionDeLaGravite extends java.lang.Thread{
         if(nombreDeThread == 0){
             for(Case c : setCaseMajAgreg){
 //                try {
-//                    sleep(10);
+//                    sleep(150);
 //                } catch (InterruptedException ex) {
 //                    Logger.getLogger(GestionDeLaGravite.class.getName()).log(Level.SEVERE, null, ex);
 //                }
-               new GestionAgregation(c).start();
+               if(init == true){
+                    new GestionAgregation(c, init).start();
+               }
+               else{
+                    new GestionAgregation(c, false).start();   
+               }
             }
             setCaseMajAgreg.clear();
         }

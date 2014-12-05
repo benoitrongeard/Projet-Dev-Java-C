@@ -110,8 +110,13 @@ public class Case extends Observable{
         return this.maForme.equals(c.getForme());
     }
     
+    public int aggregation(boolean init){
+        new GestionAgregation(this, init).start();
+        return 1;
+    }
+    
     public int aggregation(){
-        new GestionAgregation(this).start();
+        new GestionAgregation(this, false).start();
         return 1;
     }
 }

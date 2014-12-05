@@ -22,7 +22,13 @@ public class ScoreLab extends JLabel implements Observer{
     @Override
     public void update(Observable o, Object arg) {
         if(o instanceof Score){
-            this.setText(((Score)o).toString());
+            Score score = (Score)o;
+            if(score.getPoints() == 0){
+                this.setText(score.toString(true)); 
+            }
+            else{
+                this.setText(score.toString(false));   
+            }
         }
     }
     

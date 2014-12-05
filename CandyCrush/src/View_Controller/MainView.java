@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 public class MainView extends JFrame{
     private ScoreLab scoreLab = new ScoreLab();
     
-    public MainView(int width, int height){
+    public MainView(final int width, final int height){
         /*  --------- Paramètres --------- */
         this.setTitle("CandyCrush Party");
         this.setSize(630,545);
@@ -50,21 +50,15 @@ public class MainView extends JFrame{
         //jpDroite.setBackground(Color.yellow);
         jpDroite.setPreferredSize(new Dimension(130,498));
         
-        /*  --------- Bouton sur la fenêtre de droite --------- */
-        JButton JB1 = new JButton();
-        JButton JB2 = new JButton();
-        JButton JB3 = new JButton();
+        /*  --------- Label sur la fenêtre de droite --------- */
         jpDroite.add(scoreLab);
-        jpDroite.add(JB1);
-        jpDroite.add(JB2);
-        jpDroite.add(JB3);
         
         
         /*  --------- Grille, fenêtre de gauche --------- */
-        JPanel jpGrille = new JPanel(new GridLayout(height,width));
+        final JPanel jpGrille = new JPanel(new GridLayout(height,width));
         jpGrille.setPreferredSize(new Dimension(500,500));
-        Grille grille = new Grille(height, width);
-        initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille));
+        final Grille grille = new Grille(height, width);
+        initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille), false);
         
         
         /*  --------- Gestion affichage --------- */
@@ -85,9 +79,10 @@ public class MainView extends JFrame{
         
         /*  --------- Action sur le menu --------- */
         nouvellePartie.addActionListener(new ActionListener() {
+            boolean reset = true;
             @Override
             public void actionPerformed(ActionEvent e) {
-                //initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille));
+                initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille), reset);
                 System.out.println("Partie renitialisée");
             }
         });
@@ -98,28 +93,45 @@ public class MainView extends JFrame{
     
     
     /*  --------- Fonction pour initialiser la grille de jeu --------- */
-    public void initialisation(int width, int height,Grille grille, JPanel jpGrille, MouseListener monMouseListener){
+    public void initialisation(int width, int height,Grille grille, JPanel jpGrille, MouseListener monMouseListener, boolean reset){
         
-        for(int j = 0; j < height; j++){
-            for(int i =0; i < width; i++){
-                Case maCase = new Case(i,j,grille);
-                grille.setCase(maCase);
-                CaseGrille maCaseGrille = new CaseGrille();
-                maCaseGrille.initialisation(maCase.getX(), maCase.getY(), maCase.getForme());
-                maCase.addObserver(maCaseGrille);
-                maCaseGrille.setBorder(BorderFactory.createLineBorder(Color.black, 2));
-                maCaseGrille.addMouseListener(monMouseListener);
-                jpGrille.add(maCaseGrille);
+        boolean init = true;
+        
+        if(reset == false){
+            for(int j = 0; j < height; j++){
+                for(int i =0; i < width; i++){
+                    Case maCase = new Case(i,j,grille);
+                    grille.setCase(maCase);
+                    CaseGrille maCaseGrille = new CaseGrille();
+                    maCaseGrille.initialisation(maCase.getX(), maCase.getY(), maCase.getForme());
+                    maCase.addObserver(maCaseGrille);
+                    maCaseGrille.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+                    maCaseGrille.addMouseListener(monMouseListener);
+                    jpGrille.add(maCaseGrille);
+                }
+            }
+
+            for(int j = 0; j < height; j++){
+                for(int i =0; i < width; i++){
+                    grille.getCase(i, j).aggregation(init);
+                }
+            }
+            Score score = new Score();
+            score.addObserver(this.scoreLab);
+            score.setPoints(0);
+            GestionAgregation.setScore(score);
+        }
+        else{
+            for(int j = 0; j < height; j++){
+                for(int i =0; i < width; i++){
+                    grille.getCase(i, j).regenerer();
+                    grille.getCase(i, j).aggregation(init);
+                    Score score = new Score();
+                    score.addObserver(this.scoreLab);
+                    score.setPoints(0);
+                    GestionAgregation.setScore(score);
+                }
             }
         }
-        
-        for(int j = 0; j < height; j++){
-            for(int i =0; i < width; i++){
-                grille.getCase(i, j).aggregation();
-            }
-        }
-        Score score = new Score();
-        score.addObserver(this.scoreLab);
-        GestionAgregation.setScore(score);
     }
 }

@@ -12,7 +12,8 @@ import java.util.Observable;
  * @author Sylvio
  */
 public class Score extends Observable{
-    int points;
+    private int points;
+    
     public Score() {
         this.points = 0;
     }
@@ -33,9 +34,14 @@ public class Score extends Observable{
         return points;
     }
     
-    @Override
-    public String toString(){
-        return ""+this.points;
+    
+    public String toString(boolean scoreNull){
+        if(scoreNull == true){
+            return "Score : " + 0;
+        }
+        else{
+            return "Score : " + this.points;
+        }
     }
     
 }
