@@ -5,6 +5,7 @@
  */
 package View_Controller;
 import Model.Case;
+import Model.Chrono;
 import Model.Grille;
 import Model.Score;
 import java.awt.Color;
@@ -28,11 +29,17 @@ import javax.swing.JPanel;
  */
 public class MainView extends JFrame{
     private ScoreLab scoreLab = new ScoreLab();
+    private ChronoLab chronoLab = new ChronoLab();
+    private final int minutes, secondes;
     
-    public MainView(final int width, final int height){
+    public MainView(final int width, final int height, final int minutes, final int secondes){
+        
+        this.minutes = minutes;
+        this.secondes = secondes;
+        
         /*  --------- Paramètres --------- */
         this.setTitle("CandyCrush Party");
-        this.setSize(630,545);
+        this.setSize(650,560);
         this.setLocationRelativeTo(null);
         //this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,13 +59,13 @@ public class MainView extends JFrame{
         
         /*  --------- Label sur la fenêtre de droite --------- */
         jpDroite.add(scoreLab);
-        
+        jpDroite.add(chronoLab);
         
         /*  --------- Grille, fenêtre de gauche --------- */
         final JPanel jpGrille = new JPanel(new GridLayout(height,width));
         jpGrille.setPreferredSize(new Dimension(500,500));
         final Grille grille = new Grille(height, width);
-        initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille), false);
+        initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille,this.minutes, this.secondes), false);
         
         
         /*  --------- Gestion affichage --------- */
@@ -82,7 +89,7 @@ public class MainView extends JFrame{
             boolean reset = true;
             @Override
             public void actionPerformed(ActionEvent e) {
-                initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille), reset);
+                initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille, minutes, secondes), reset);
                 System.out.println("Partie renitialisée");
             }
         });
@@ -120,18 +127,31 @@ public class MainView extends JFrame{
             score.addObserver(this.scoreLab);
             score.setPoints(0);
             GestionAgregation.setScore(score);
+            
+            Chrono chrono = new Chrono(minutes, secondes);
+            chrono.addObserver(this.chronoLab);
+            chrono.setChrono(minutes, secondes);
+            GestionChrono.setChrono(chrono);
+            
+            
         }
         else{
             for(int j = 0; j < height; j++){
                 for(int i =0; i < width; i++){
                     grille.getCase(i, j).regenerer();
                     grille.getCase(i, j).aggregation(init);
-                    Score score = new Score();
-                    score.addObserver(this.scoreLab);
-                    score.setPoints(0);
-                    GestionAgregation.setScore(score);
                 }
             }
+            Score score = new Score();
+            score.addObserver(this.scoreLab);
+            score.setPoints(0);
+            GestionAgregation.setScore(score);
+            
+            Chrono chrono = new Chrono(minutes, secondes);
+            chrono.addObserver(this.chronoLab);
+            chrono.setChrono(minutes, secondes);
+            GestionChrono.setChrono(chrono);
+            GestionChrono.setDebutChrono(1); //On permet au chronomètre de se lancer à nouveau quand on démarre une nouvelle partie
         }
     }
 }

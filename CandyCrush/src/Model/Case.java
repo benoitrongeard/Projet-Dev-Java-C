@@ -116,7 +116,8 @@ public class Case extends Observable{
     }
     
     public int aggregation(){
-        new GestionAgregation(this, false).start();
+        GestionAgregation gestionAgregation = new GestionAgregation(this, false);
+        gestionAgregation.start();
         return 1;
     }
 }

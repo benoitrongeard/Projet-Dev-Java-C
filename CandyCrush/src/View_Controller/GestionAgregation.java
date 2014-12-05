@@ -60,12 +60,6 @@ public class GestionAgregation extends java.lang.Thread{
     @SuppressWarnings("empty-statement")
     @Override
     public void run(){
-//        if(init){
-//            System.out.println("INITIALISATION");
-//        }
-//        else{
-//            System.out.println("PAS INITIALISATION");
-//        }
         if(maCase != null && maCase.getForme() != null){
             incrementThread();
             synchronized(maCase.getGrille()){
@@ -150,9 +144,11 @@ public class GestionAgregation extends java.lang.Thread{
                     }
                     point += (nbCaseHaut + nbCaseBas);
                 }
-                
-               
-                
+                else{
+                    nbCaseBas = 0;
+                    nbCaseHaut = 0;
+                }
+
                 if(point > 0){
                     GestionAgregation.addPoints(point);
                     modifG = true;
