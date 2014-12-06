@@ -10,6 +10,7 @@ import Model.Grille;
 import Model.Score;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +32,7 @@ public class MainView extends JFrame{
     private ScoreLab scoreLab = new ScoreLab();
     private ChronoLab chronoLab = new ChronoLab();
     private final int minutes, secondes;
+    private final String POLICE = "Arial";
     
     public MainView(final int width, final int height, final int minutes, final int secondes){
         
@@ -39,7 +41,7 @@ public class MainView extends JFrame{
         
         /*  --------- Paramètres --------- */
         this.setTitle("CandyCrush Party");
-        this.setSize(650,560);
+        this.setSize(665,560);
         this.setLocationRelativeTo(null);
         //this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,7 +60,9 @@ public class MainView extends JFrame{
         jpDroite.setPreferredSize(new Dimension(130,498));
         
         /*  --------- Label sur la fenêtre de droite --------- */
+        scoreLab.setFont(new Font(POLICE, 0, 18));
         jpDroite.add(scoreLab);
+        chronoLab.setFont(new Font(POLICE, 0, 18));
         jpDroite.add(chronoLab);
         
         /*  --------- Grille, fenêtre de gauche --------- */

@@ -67,9 +67,14 @@ public class GestionAgregation extends java.lang.Thread{
         incrementThread();
         boolean compatible = false;
         
+        System.out.println("macase" +   maCase.getForme());
+        System.out.println("maCase2" +   maCase2.getForme());
         Forme formeTmp = maCase.getForme();
         maCase.setForme(maCase2.getForme());
         maCase2.setForme(formeTmp);
+        
+        System.out.println("macase" +   maCase.getForme());
+        System.out.println("maCase2" +   maCase2.getForme());
         
         if(this.agregation(this.maCase) != 0){
             compatible = true;

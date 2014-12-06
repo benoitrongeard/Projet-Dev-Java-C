@@ -100,9 +100,19 @@ public class GestionDeLaGrille implements MouseListener{
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        CaseGrille maCaseGrille = (CaseGrille) e.getSource();
+        Case c = maGrille.getCase(maCaseGrille.x, maCaseGrille.y);
+        Color maColor = c.getCouleurForme();
+        maCaseGrille.setBackground(maColor);;
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+        if(e.getSource() != this.caseSelected){
+            CaseGrille maCaseGrille = (CaseGrille) e.getSource();
+            Case c = maGrille.getCase(maCaseGrille.x, maCaseGrille.y);
+            Color maColor = c.getCouleurForme();
+            maCaseGrille.setBackground(maColor);
+        }
     }
 }
