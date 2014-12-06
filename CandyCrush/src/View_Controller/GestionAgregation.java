@@ -6,8 +6,12 @@
 package View_Controller;
 
 import Model.Case;
+import Model.Forme;
 import Model.Grille;
 import Model.Score;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -20,6 +24,7 @@ public class GestionAgregation extends java.lang.Thread{
     private static Score score = null;
     private final Case maCase;
     private static boolean init;
+    private static Set<Integer> setColumnToUpdGrav = Collections.synchronizedSet(new HashSet());
     
     public GestionAgregation(Case maCase, boolean init){
         this.maCase = maCase;
@@ -42,30 +47,55 @@ public class GestionAgregation extends java.lang.Thread{
         nombreDeThread++;
     }
     
-    public static synchronized void decrementThread(Grille g){
+    public static synchronized void decrementThread(Case c){
         nombreDeThread--;
-        if(nombreDeThread == 0 && g != null && modifG){
-            modifG = false;
-            for(int i=0; i < g.getLargeur(); i++){
+        if(nombreDeThread == 0){
+            for (Integer it: setColumnToUpdGrav) {
                 if(init == true){
-                    new GestionDeLaGravite(i, g, init).start();
+                    new GestionDeLaGravite(it, c.getGrille(), init).start();
                 }
                 else{
-                    new GestionDeLaGravite(i, g, false).start();
+                    new GestionDeLaGravite(it, c.getGrille(), false).start();
                 }
             }
+            setColumnToUpdGrav.clear();
         }
     }
     
-    @SuppressWarnings("empty-statement")
-    @Override
-    public void run(){
+    public boolean testCase(Case maCase2){
+        incrementThread();
+        incrementThread();
+        boolean compatible = false;
+        
+        Forme formeTmp = maCase.getForme();
+        maCase.setForme(maCase2.getForme());
+        maCase2.setForme(formeTmp);
+        
+        if(this.agregation(this.maCase) != 0){
+            compatible = true;
+        }
+        if(this.agregation(maCase2) != 0){
+            compatible = true;
+        }
+        if(compatible == true){
+            maCase.changeForme(maCase.getForme());
+            maCase2.changeForme(maCase2.getForme());
+        }
+        else{
+            maCase2.changeForme(maCase.getForme());
+            maCase.changeForme(formeTmp);
+        }
+        decrementThread(maCase);
+        decrementThread(maCase2);
+        return compatible;
+    }
+    
+    public int agregation(Case case1){
+        int point = 0;
         if(maCase != null && maCase.getForme() != null){
-            incrementThread();
             synchronized(maCase.getGrille()){
                 Grille maGrille = maCase.getGrille();
                 int nbCaseDroite, nbCaseGauche, nbCaseHaut, nbCaseBas;
-                int point = 0;
 
                 //On parcour les cases à droite
                 nbCaseDroite = 0;
@@ -124,15 +154,16 @@ public class GestionAgregation extends java.lang.Thread{
                     }
                 }
 
-//                System.out.println("-- Haut : " + nbCaseHaut + " Bas : " + nbCaseBas);
-//                System.out.println("   Droite : " + nbCaseDroite + " Gauche : " + nbCaseGauche);
+                System.out.println("-- Haut : " + nbCaseHaut + " Bas : " + nbCaseBas);
+                System.out.println("   Droite : " + nbCaseDroite + " Gauche : " + nbCaseGauche);
                 
                 
                 if((nbCaseDroite + nbCaseGauche + 1) >= 3){
                     for(int i = maCase.getX() - nbCaseGauche; i < (maCase.getX() + nbCaseDroite+1); i++){
                         maGrille.getCase(i, maCase.getY()).setForme(null);
                     }
-                    point += (nbCaseDroite + nbCaseGauche);
+                    point += (nbCaseDroite + nbCaseGauche) - 1;
+                    System.out.println("largeur : " +   point);
                 }
                 else{
                     nbCaseDroite = 0;
@@ -142,19 +173,28 @@ public class GestionAgregation extends java.lang.Thread{
                     for(int i = maCase.getY() - nbCaseHaut; i < (maCase.getY() + nbCaseBas+1); i++){
                         maGrille.getCase(maCase.getX(), i).setForme(null);
                     }
-                    point += (nbCaseHaut + nbCaseBas);
-                }
-                else{
-                    nbCaseBas = 0;
-                    nbCaseHaut = 0;
+                    point += (nbCaseHaut + nbCaseBas) - 1;
+                    System.out.println("hauteur : " +   point);
                 }
 
                 if(point > 0){
                     GestionAgregation.addPoints(point);
-                    modifG = true;
+                    setColumnToUpdGrav.add(maCase.getX());
+                    for(int j = maCase.getX() - nbCaseGauche; j < (maCase.getX() + nbCaseDroite + 1); j++){
+                        if(j != maCase.getX()){
+                            setColumnToUpdGrav.add(j);
+                        }
+                    }
                 }
             }
-            decrementThread(maCase.getGrille());
         }
+        return point;
+    }
+    
+    @Override
+    public void run(){
+        incrementThread();
+        agregation(maCase);
+        decrementThread(maCase);
     }
 }

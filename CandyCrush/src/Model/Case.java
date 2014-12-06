@@ -111,7 +111,9 @@ public class Case extends Observable{
     }
     
     public int aggregation(boolean init){
-        new GestionAgregation(this, init).start();
+        if(this.getForme() != null){
+            new GestionAgregation(this, init).start();
+        }
         return 1;
     }
     
