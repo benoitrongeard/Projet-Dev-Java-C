@@ -9,9 +9,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import View_Controller.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.Timer;
 
 /**
  *
@@ -30,6 +27,6 @@ public class CandyCrush{
     public static void main (String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         
-       MainView fenetre = new MainView(9,9,0,10);
+       MainView fenetre = new MainView(9,9,1,10);
     }
 }
