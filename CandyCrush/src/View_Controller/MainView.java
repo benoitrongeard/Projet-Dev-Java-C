@@ -151,7 +151,7 @@ public class MainView extends JFrame{
             chrono.addObserver(this.chronoLab);
             chrono.setChrono(minutes, secondes);
             GestionChrono.setChrono(chrono);
-            GestionChrono.setDebutChrono(1); //On permet au chronomètre de se lancer à nouveau quand on démarre une nouvelle partie
+            GestionChrono.setDebutChrono(1); //On permet au chronomètre de se lancer à nouveau quand on  redémarre une nouvelle partie
         }
     }
 }
