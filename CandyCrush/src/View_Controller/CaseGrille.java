@@ -45,8 +45,5 @@ public class CaseGrille extends JPanel implements Observer{
                 this.setBackground(Color.white);
             }
         }
-    }
-    
-    
-    
+    }        
 }

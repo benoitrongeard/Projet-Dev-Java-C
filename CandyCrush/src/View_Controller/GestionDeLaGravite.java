@@ -10,6 +10,8 @@ import Model.Grille;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -38,11 +40,11 @@ public class GestionDeLaGravite extends java.lang.Thread{
         nombreDeThread--;
         if(nombreDeThread == 0){
             for(Case c : setCaseMajAgreg){
-//                try {
-//                    sleep(150);
-//                } catch (InterruptedException ex) {
-//                    Logger.getLogger(GestionDeLaGravite.class.getName()).log(Level.SEVERE, null, ex);
-//                }
+                try {
+                    sleep(10);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(GestionDeLaGravite.class.getName()).log(Level.SEVERE, null, ex);
+                }
                if(init == true){
                     new GestionAgregation(c, init).start();
                }

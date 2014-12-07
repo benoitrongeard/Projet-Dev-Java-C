@@ -108,7 +108,7 @@ public class MainView extends JFrame{
         
         boolean init = true;
         
-        if(reset == false){
+        if(reset == false){ //Si la partie n'est pas renitialisée
             for(int j = 0; j < height; j++){
                 for(int i =0; i < width; i++){
                     Case maCase = new Case(i,j,grille);
@@ -139,7 +139,7 @@ public class MainView extends JFrame{
             
             
         }
-        else{
+        else{   //Si la partie est renitialisée
             for(int j = 0; j < height; j++){
                 for(int i =0; i < width; i++){
                     grille.getCase(i, j).regenerer();

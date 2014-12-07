@@ -28,6 +28,14 @@ public class Chrono extends Observable implements ActionListener{
     public boolean getPartieTerminee(){
         return this.partieTermine;
     }
+
+    public int getTimeMinute() {
+        return timeMinute;
+    }
+
+    public int getTimeSeconde() {
+        return timeSeconde;
+    }
     
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -39,7 +47,7 @@ public class Chrono extends Observable implements ActionListener{
             else{
                 this.timeSeconde--;
             }
-            System.out.println(this.timeMinute + " : " + this.timeSeconde);
+            System.out.println("Temps restant : " + this.timeMinute + " : " + this.timeSeconde);
             if(this.timeSeconde == 0 && this.timeMinute == 0){
                 System.out.println("Temps écoulé, partie terminée !!"); //Met fin à la partie
                 this.partieTermine = true;

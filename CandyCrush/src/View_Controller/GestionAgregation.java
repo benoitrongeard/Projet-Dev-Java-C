@@ -66,15 +66,10 @@ public class GestionAgregation extends java.lang.Thread{
         incrementThread();
         incrementThread();
         boolean compatible = false;
-        
-        System.out.println("macase" +   maCase.getForme());
-        System.out.println("maCase2" +   maCase2.getForme());
-        Forme formeTmp = maCase.getForme();
-        maCase.setForme(maCase2.getForme());
+
+        Forme formeTmp = this.maCase.getForme();
+        this.maCase.setForme(maCase2.getForme());
         maCase2.setForme(formeTmp);
-        
-        System.out.println("macase" +   maCase.getForme());
-        System.out.println("maCase2" +   maCase2.getForme());
         
         if(this.agregation(this.maCase) != 0){
             compatible = true;
@@ -83,19 +78,22 @@ public class GestionAgregation extends java.lang.Thread{
             compatible = true;
         }
         if(compatible == true){
-            maCase.changeForme(maCase.getForme());
+            this.maCase.changeForme(this.maCase.getForme());
             maCase2.changeForme(maCase2.getForme());
         }
         else{
-            maCase2.changeForme(maCase.getForme());
-            maCase.changeForme(formeTmp);
+            maCase2.changeForme(this.maCase.getForme());
+            this.maCase.changeForme(formeTmp);
         }
-        decrementThread(maCase);
+        decrementThread(this.maCase);
         decrementThread(maCase2);
+        if(compatible == false){
+            System.out.println("Impossible d'intervertir !");
+        }
         return compatible;
     }
     
-    public int agregation(Case case1){
+    public int agregation(Case maCase){
         int point = 0;
         if(maCase != null && maCase.getForme() != null){
             synchronized(maCase.getGrille()){

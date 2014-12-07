@@ -44,7 +44,7 @@ public class GestionDeLaGrille implements MouseListener{
             }
                 if(caseSelected == null){
                     caseSelected = maCaseGrille;
-                    maCaseGrille.setBorder(BorderFactory.createLineBorder(Color.white, 2));
+                    maCaseGrille.setBorder(BorderFactory.createLineBorder(Color.CYAN, 2));
                     if(GestionChrono.getDebutChrono() == 1){ //On lance le chrono si l'utilisateur fait un clique
                         gestionChrono.start();
                         GestionChrono.setDebutChrono(0);
@@ -101,18 +101,16 @@ public class GestionDeLaGrille implements MouseListener{
     @Override
     public void mouseEntered(MouseEvent e) {
         CaseGrille maCaseGrille = (CaseGrille) e.getSource();
-        Case c = maGrille.getCase(maCaseGrille.x, maCaseGrille.y);
-        Color maColor = c.getCouleurForme();
-        maCaseGrille.setBackground(maColor);;
+        if(maCaseGrille != caseSelected){
+            maCaseGrille.setBorder(BorderFactory.createLineBorder(Color.white, 2));
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         if(e.getSource() != this.caseSelected){
             CaseGrille maCaseGrille = (CaseGrille) e.getSource();
-            Case c = maGrille.getCase(maCaseGrille.x, maCaseGrille.y);
-            Color maColor = c.getCouleurForme();
-            maCaseGrille.setBackground(maColor);
+            maCaseGrille.setBorder(BorderFactory.createLineBorder(Color.black, 2));
         }
     }
 }

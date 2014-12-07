@@ -6,6 +6,7 @@
 package View_Controller;
 
 import Model.Chrono;
+import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JLabel;
@@ -24,7 +25,15 @@ public class ChronoLab extends JLabel implements Observer{
     public void update(Observable o, Object arg) {
         if(o instanceof Chrono){
             Chrono chrono = (Chrono)o;
+            
+            if(chrono.getTimeMinute() <= 5 && chrono.getTimeSeconde() <= 5){
+                this.setText(chrono.toString()); 
+                this.setForeground(Color.red);
+            }
+            else{
                 this.setText(chrono.toString());  
+                this.setForeground(Color.black);
+            }       
         }
     }    
     
