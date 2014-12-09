@@ -5,11 +5,13 @@
  */
 package Model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Neo
  */
-public class Grille {
+public class Grille implements Serializable{
     private Case t_case[][];
     private final int x,y;
 
@@ -47,7 +49,7 @@ public class Grille {
         String chaine = "";
         for(int j = 0; j < this.y; j++){
             for(int i = 0; i < this.x; i++){
-                chaine += this.t_case[j][i];
+                chaine += " " + this.t_case[j][i].getNumCouleurForme();
             }
             chaine += "\n";
         }

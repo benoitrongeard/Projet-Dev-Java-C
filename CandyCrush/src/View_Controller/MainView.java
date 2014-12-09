@@ -15,29 +15,47 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author dualshote
  */
-public class MainView extends JFrame{
+public class MainView extends JFrame {
     private ScoreLab scoreLab = new ScoreLab();
     private ChronoLab chronoLab = new ChronoLab();
     private final int minutes, secondes;
     private final String POLICE = "Arial";
+    private JPanel jpGrille;
+    
+    /* Objet pour la serialisation */
+    private Score scoreSeria;
+    private Chrono chronoSeria;
+    private Grille grilleSeria;
+    
+    private int width;
+    private int height;
     
     public MainView(final int width, final int height, final int minutes, final int secondes){
         
         this.minutes = minutes;
         this.secondes = secondes;
+        this.width = width;
+        this.height = height;
         
         /*  --------- Paramètres --------- */
         this.setTitle("CandyCrush Party");
@@ -51,7 +69,11 @@ public class MainView extends JFrame{
         JMenuBar menu = new JMenuBar();
         JMenu partie = new JMenu("Partie");
         JMenuItem nouvellePartie = new JMenuItem("Nouvelle partie");
+        JMenuItem sauegarderPartie = new JMenuItem("Sauvegarder une partie");
+        JMenuItem chargerPartie = new JMenuItem("Charger une partie");
         partie.add(nouvellePartie);
+        partie.add(sauegarderPartie);
+        partie.add(chargerPartie);
         menu.add(partie);
         
         /*  --------- Fenetre de droite --------- */
@@ -66,10 +88,10 @@ public class MainView extends JFrame{
         jpDroite.add(chronoLab);
         
         /*  --------- Grille, fenêtre de gauche --------- */
-        final JPanel jpGrille = new JPanel(new GridLayout(height,width));
+        jpGrille = new JPanel(new GridLayout(height,width));
         jpGrille.setPreferredSize(new Dimension(500,500));
-        final Grille grille = new Grille(height, width);
-        initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille,this.minutes, this.secondes), false);
+        grilleSeria = new Grille(height, width);
+        initialisation(width, height, grilleSeria, jpGrille, new GestionDeLaGrille(grilleSeria,this.minutes, this.secondes), 0);
         
         
         /*  --------- Gestion affichage --------- */
@@ -93,22 +115,48 @@ public class MainView extends JFrame{
             boolean reset = true;
             @Override
             public void actionPerformed(ActionEvent e) {
-                initialisation(width, height, grille, jpGrille, new GestionDeLaGrille(grille, minutes, secondes), reset);
+                initialisation(width, height, grilleSeria, jpGrille, new GestionDeLaGrille(grilleSeria, minutes, secondes), 1);
                 System.out.println("Partie renitialisée");
             }
         });
         
+        sauegarderPartie.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    sauvegargerSeria();
+                } catch (IOException ex) {
+                    Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        chargerPartie.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try { 
+                    chargementSeria();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        
+        /*  Paramètre pour rendre visible la fenêtre    */
         this.setJMenuBar(menu);
         this.setVisible(true);
     }
     
     
     /*  --------- Fonction pour initialiser la grille de jeu --------- */
-    public void initialisation(int width, int height,Grille grille, JPanel jpGrille, MouseListener monMouseListener, boolean reset){
+    public void initialisation(int width, int height,Grille grille, JPanel jpGrille, MouseListener monMouseListener, int reset){
         
         boolean init = true;
         
-        if(reset == false){ //Si la partie n'est pas renitialisée
+        if(reset == 0){ //Si la partie n'est pas renitialisée
             for(int j = 0; j < height; j++){
                 for(int i =0; i < width; i++){
                     Case maCase = new Case(i,j,grille);
@@ -121,7 +169,7 @@ public class MainView extends JFrame{
                     jpGrille.add(maCaseGrille);
                 }
             }
-
+            
             for(int j = 0; j < height; j++){
                 for(int i =0; i < width; i++){
                     grille.getCase(i, j).aggregation(init);
@@ -138,8 +186,13 @@ public class MainView extends JFrame{
             GestionChrono.setChrono(chrono);
             
             
+            /*  Definition objet pour la serialisation  */
+            this.grilleSeria = grille;
+            this.scoreSeria = score;
+            this.chronoSeria = chrono;
+            
         }
-        else{   //Si la partie est renitialisée
+        else if(reset == 1){   //Si la partie est renitialisée
             for(int j = 0; j < height; j++){
                 for(int i =0; i < width; i++){
                     grille.getCase(i, j).regenerer();
@@ -156,6 +209,87 @@ public class MainView extends JFrame{
             chrono.setChrono(minutes, secondes);
             GestionChrono.setChrono(chrono);
             GestionChrono.setDebutChrono(1); //On permet au chronomètre de se lancer à nouveau quand on  redémarre une nouvelle partie
+        
+            /*  Definition objet pour la serialisation  */
+            this.grilleSeria = grille;
+            this.scoreSeria = score;
+            this.chronoSeria = chrono;
         }
+        else if(reset == -1){
+            System.out.println("aeeahe");
+            for(int j = 0; j < height; j++){
+                for(int i =0; i < width; i++){
+                    grille.getCase(i, j).regenerer();
+                }
+            }
+            
+            System.out.println("grille apres chargement : " + grille);
+        }
+    }
+    
+    public void chargementSeria() throws FileNotFoundException{
+        ObjectInputStream oisGrille = null;
+        Grille grille = null;
+        
+        try{
+            final FileInputStream fichierGrille = new FileInputStream("grille.serial");
+            oisGrille = new ObjectInputStream(fichierGrille);
+            grille = (Grille) oisGrille.readObject();
+                     
+            this.grilleSeria = grille;            
+            System.out.println("Grille chargée  : " + this.grilleSeria);
+        }
+        catch(final java.io.IOException e){
+             e.printStackTrace();
+        }
+        catch (final ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+              if (oisGrille != null) {
+                oisGrille.close();
+              }
+            }
+            catch (final IOException ex) {
+              ex.printStackTrace();
+            }
+        }
+        
+        System.out.println("Partie chargée ! ");
+        if(grille != null){
+            initialisation(this.width, this.height, this.grilleSeria, this.jpGrille, new GestionDeLaGrille(this.grilleSeria, minutes, secondes), -1);
+        }
+    }
+    
+    public void sauvegargerSeria() throws FileNotFoundException, IOException{
+        Grille grille1 = this.grilleSeria;
+        ObjectOutputStream oosGrille = null;
+        System.out.println("Grille avant seria  : " + grille1);
+        try {
+            final FileOutputStream fosGrille = new FileOutputStream("grille.serial");
+            oosGrille = new ObjectOutputStream(fosGrille);
+            // Ecriture dans le flux de sortie
+            oosGrille.writeObject(grille1);
+
+            // Vide le tampon
+            oosGrille.flush();
+
+        } 
+        catch (final java.io.IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if(oosGrille != null){
+                    oosGrille.close();
+                    oosGrille.close();
+                }
+            }
+            catch (final IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        System.out.println("Partie sauvegardée ! ");
     }
 }

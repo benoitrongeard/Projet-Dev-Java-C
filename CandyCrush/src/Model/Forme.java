@@ -6,12 +6,13 @@
 package Model;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 /**
  *
  * @author dualshote
  */
-public class Forme {
+public class Forme implements Serializable{
     
     private Color c;
     private int numColor;

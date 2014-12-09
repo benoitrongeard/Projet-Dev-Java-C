@@ -7,6 +7,7 @@ package Model;
 
 import View_Controller.GestionAgregation;
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.Observable;
 
 
@@ -17,7 +18,7 @@ import java.util.Observable;
  * @author Neo
  */
 
-public class Case extends Observable{
+public class Case extends Observable implements Serializable{
     
     private final int x,y;
     private boolean selected,marked;
