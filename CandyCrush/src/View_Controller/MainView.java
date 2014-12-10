@@ -44,7 +44,7 @@ public class MainView extends JFrame {
     
     /* Objet pour la serialisation */
     private Score scoreSeria;
-    private GestionChrono gestionChronoSeria;
+    private Chrono chronoSeria;
     private Grille grilleSeria;
     
     private int width;
@@ -152,7 +152,7 @@ public class MainView extends JFrame {
     
     
     /*  --------- Fonction pour initialiser la grille de jeu --------- */
-    public void initialisation(int width, int height,Grille grille, JPanel jpGrille, MouseListener monMouseListener, int reset, Score scoreParam, GestionChrono gestionChronoParam){
+    public void initialisation(int width, int height,Grille grille, JPanel jpGrille, MouseListener monMouseListener, int reset, Score scoreParam, Chrono chronoParam){
         
         boolean init = true;
         
@@ -189,7 +189,7 @@ public class MainView extends JFrame {
             /*  Definition objet pour la serialisation  */
             this.grilleSeria = grille;
             this.scoreSeria = score;
-            this.gestionChronoSeria = new GestionChrono(minutes, secondes);
+            this.chronoSeria = chrono;
             
         }
         else if(reset == 1){   //Si la partie est renitialisée
@@ -213,7 +213,7 @@ public class MainView extends JFrame {
             /*  Definition objet pour la serialisation  */
             this.grilleSeria = grille;
             this.scoreSeria = score;
-            this.gestionChronoSeria = new GestionChrono(minutes, secondes);
+            this.chronoSeria = chrono;
         }
         else if(reset == -1){
             System.out.println("Chargement....");
@@ -235,19 +235,18 @@ public class MainView extends JFrame {
                 GestionAgregation.setScore(score);
             }
             
-            if(gestionChronoParam != null){
-                Chrono chrono = new Chrono(minutes, secondes);
-                chrono.addObserver(this.chronoLab);
-                chrono.setChrono(gestionChronoParam.getMinuteChrono(), gestionChronoParam.getSecondeChrono());
-                GestionChrono.setChrono(chrono);
-                GestionChrono.setDebutChrono(1);
+            if(chronoParam != null){
+                this.chronoSeria.addObserver(this.chronoLab);
+                this.chronoSeria.setChrono(chronoParam.getTimeMinute(), chronoParam.getTimeSeconde());
+                GestionChrono.setChrono(this.chronoSeria);
+                GestionChrono.setDebutChrono(1); 
             }
             else{
                 Chrono chrono = new Chrono(minutes, secondes);
                 chrono.addObserver(this.chronoLab);
                 chrono.setChrono(minutes, secondes);
                 GestionChrono.setChrono(chrono);
-                GestionChrono.setDebutChrono(1);  
+                GestionChrono.setDebutChrono(1); 
             }
             
             System.out.println("grille apres chargement : " + grille);
@@ -257,21 +256,21 @@ public class MainView extends JFrame {
     public void chargementSeria() throws FileNotFoundException{
         ObjectInputStream oisGrille = null;
         ObjectInputStream oisScore = null;
-        ObjectInputStream oisGestionChrono = null;
+        ObjectInputStream oisChrono = null;
         Grille grille = null;
         Score score = null;
-        GestionChrono gestionChrono = null;
+        Chrono chrono = null;
         
         try{
             final FileInputStream fichierGrille = new FileInputStream("grille.serial");
             final FileInputStream fichierScore = new FileInputStream("score.serial");
-            final FileInputStream fichierGestionChrono = new FileInputStream("gestionChrono.serial");
+            final FileInputStream fichierChrono = new FileInputStream("chrono.serial");
             oisGrille = new ObjectInputStream(fichierGrille);
             oisScore = new ObjectInputStream(fichierScore);
-            oisGestionChrono = new ObjectInputStream(fichierGestionChrono);
+            oisChrono = new ObjectInputStream(fichierChrono);
             grille = (Grille) oisGrille.readObject();
             score = (Score) oisScore.readObject();
-            gestionChrono = (GestionChrono) oisGestionChrono.readObject();
+            chrono = (Chrono) oisChrono.readObject();
         }
         catch(final java.io.IOException e){
              e.printStackTrace();
@@ -285,10 +284,10 @@ public class MainView extends JFrame {
                 oisGrille.close();
               }
               if(oisScore != null){
-                oisScore.close();
+                  oisScore.close();
               }
-              if(oisGestionChrono != null){
-                  oisGestionChrono.close();
+              if(oisChrono != null){
+                  oisChrono.close();
               }
             }
             catch (final IOException ex) {
@@ -297,45 +296,44 @@ public class MainView extends JFrame {
         }
        
         if(grille != null){
-            initialisation(this.width, this.height, grille, this.jpGrille, new GestionDeLaGrille(grille, minutes, secondes), -1, score, gestionChrono);
+            initialisation(this.width, this.height, grille, this.jpGrille, new GestionDeLaGrille(grille, minutes, secondes), -1, score, chrono);
         }
         System.out.println("Grille chargée  : " + grille);
-        System.out.println("Score chargé : " + score.getPoints());
-        System.out.println("Chrono chargé : " + gestionChrono.getChrono());
+        System.out.println("Score chargé : " + score);
+        System.out.println("Temps chargé : " + chrono);
         System.out.println("Partie chargée ! ");
     }
     
     public void sauvegargerSeria() throws FileNotFoundException, IOException{
         Grille grille1 = this.grilleSeria;
         Score score1 = this.scoreSeria;
-        GestionChrono gestionChrono1 = this.gestionChronoSeria;
-        gestionChrono1.setChronoParam();
+        Chrono chrono1 = this.chronoSeria;
         
         ObjectOutputStream oosGrille = null;
         ObjectOutputStream oosScore = null;
-        ObjectOutputStream oosGestionChrono = null;
+        ObjectOutputStream oosChrono = null;
         
         System.out.println("Grille avant seria  : " + grille1);
         System.out.println("Score avant seria : " + score1.getPoints());
-        System.out.println("Chrono avant seria : " + gestionChrono1.getChrono());
+        System.out.println("Temps avant seria : " + chrono1);
         try {
             final FileOutputStream fosGrille = new FileOutputStream("grille.serial");
             final FileOutputStream fosScore = new FileOutputStream("score.serial");
-            final FileOutputStream fosGestionChrono = new FileOutputStream("gestionChrono.serial");
+            final FileOutputStream fosChrono = new FileOutputStream("chrono.serial");
             
             oosGrille = new ObjectOutputStream(fosGrille);
             oosScore = new ObjectOutputStream(fosScore);
-            oosGestionChrono = new ObjectOutputStream(fosGestionChrono);
+            oosChrono = new ObjectOutputStream(fosChrono);
             
             // Ecriture dans le flux de sortie
             oosGrille.writeObject(grille1);
             oosScore.writeObject(score1);
-            oosGestionChrono.writeObject(gestionChrono1);
+            oosChrono.writeObject(chrono1);
 
             // Vide le tampon
             oosGrille.flush();
             oosScore.flush();
-            oosGestionChrono.flush();
+            oosChrono.flush();
 
         } 
         catch (final java.io.IOException e) {
@@ -349,8 +347,8 @@ public class MainView extends JFrame {
                 if(oosScore != null){
                     oosScore.close();
                 }
-                if(oosGestionChrono != null){
-                    oosGestionChrono.close();
+                if(oosChrono != null){
+                    oosChrono.close();
                 }
             }
             catch (final IOException ex) {

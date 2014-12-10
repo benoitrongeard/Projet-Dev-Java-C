@@ -7,7 +7,6 @@ package View_Controller;
 
 import Model.Chrono;
 import candycrush.CandyCrush;
-import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
@@ -16,31 +15,29 @@ import javax.swing.Timer;
  *
  * @author Benoit
  */
-public class GestionChrono extends java.lang.Thread implements Serializable{
-    private int minutes, secondes;
+public class GestionChrono extends java.lang.Thread{
+    private static int minutes, secondes;
     private static Chrono chrono = null;
     private static int debutChrono;
     
+    private static Timer timer;
+    
     
     public GestionChrono(int minutes, int secondes){
-        this.minutes = minutes;
-        this.secondes = secondes;
+        GestionChrono.minutes = minutes;
+        GestionChrono.secondes = secondes;
     }
     
     public static void setChrono(Chrono chrono){
         GestionChrono.chrono = chrono;
     }
     
-    public void setChronoParam(){
-        GestionChrono.chrono = new Chrono(this.minutes, this.secondes);
+    public static int getMinuteChrono(){
+        return GestionChrono.minutes;
     }
     
-    public int getMinuteChrono(){
-        return this.minutes;
-    }
-    
-     public int getSecondeChrono(){
-        return this.secondes;
+     public static int getSecondeChrono(){
+        return GestionChrono.secondes;
     }
     
     public static void setDebutChrono(int debutChrono){
@@ -57,7 +54,7 @@ public class GestionChrono extends java.lang.Thread implements Serializable{
     
     @Override
     public void run(){
-        Timer timer = new Timer(1000, chrono);
+        timer = new Timer(1000, chrono);
         timer.start();
         int minuteEnSeconde = this.minutes * 60;
         int totalSeconde = minuteEnSeconde + this.secondes;

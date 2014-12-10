@@ -68,6 +68,6 @@ public class CandyCrush{
             MainView fenetre = new MainView(9,9,minutes,secondes);
         }*/
         
-        MainView fenetre = new MainView(9,9,0,15);
+        MainView fenetre = new MainView(9,9,0,25);
     }
 }

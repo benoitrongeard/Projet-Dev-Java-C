@@ -7,13 +7,14 @@ package Model;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.Observable;
 
 /**
  *
  * @author benoit
  */
-public class Chrono extends Observable implements ActionListener{
+public class Chrono extends Observable implements ActionListener, Serializable{
     
     private int timeMinute;
     private int timeSeconde;

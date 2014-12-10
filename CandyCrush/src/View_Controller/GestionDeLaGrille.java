@@ -6,7 +6,6 @@
 package View_Controller;
 
 import Model.Case;
-import Model.Forme;
 import Model.Grille;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
