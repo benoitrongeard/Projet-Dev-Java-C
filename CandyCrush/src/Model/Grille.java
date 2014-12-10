@@ -53,6 +53,6 @@ public class Grille implements Serializable{
             }
             chaine += "\n";
         }
-        return "Tableau : \n" + chaine;
+        return "\n" + chaine;
     }
 }

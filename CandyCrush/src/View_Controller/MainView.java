@@ -44,7 +44,7 @@ public class MainView extends JFrame {
     
     /* Objet pour la serialisation */
     private Score scoreSeria;
-    private Chrono chronoSeria;
+    private GestionChrono gestionChronoSeria;
     private Grille grilleSeria;
     
     private int width;
@@ -91,7 +91,7 @@ public class MainView extends JFrame {
         jpGrille = new JPanel(new GridLayout(height,width));
         jpGrille.setPreferredSize(new Dimension(500,500));
         grilleSeria = new Grille(height, width);
-        initialisation(width, height, grilleSeria, jpGrille, new GestionDeLaGrille(grilleSeria,this.minutes, this.secondes), 0);
+        initialisation(width, height, grilleSeria, jpGrille, new GestionDeLaGrille(grilleSeria,this.minutes, this.secondes), 0, null, null);
         
         
         /*  --------- Gestion affichage --------- */
@@ -115,7 +115,7 @@ public class MainView extends JFrame {
             boolean reset = true;
             @Override
             public void actionPerformed(ActionEvent e) {
-                initialisation(width, height, grilleSeria, jpGrille, new GestionDeLaGrille(grilleSeria, minutes, secondes), 1);
+                initialisation(width, height, grilleSeria, jpGrille, new GestionDeLaGrille(grilleSeria, minutes, secondes), 1, null, null);
                 System.out.println("Partie renitialisée");
             }
         });
@@ -152,7 +152,7 @@ public class MainView extends JFrame {
     
     
     /*  --------- Fonction pour initialiser la grille de jeu --------- */
-    public void initialisation(int width, int height,Grille grille, JPanel jpGrille, MouseListener monMouseListener, int reset){
+    public void initialisation(int width, int height,Grille grille, JPanel jpGrille, MouseListener monMouseListener, int reset, Score scoreParam, GestionChrono gestionChronoParam){
         
         boolean init = true;
         
@@ -189,7 +189,7 @@ public class MainView extends JFrame {
             /*  Definition objet pour la serialisation  */
             this.grilleSeria = grille;
             this.scoreSeria = score;
-            this.chronoSeria = chrono;
+            this.gestionChronoSeria = new GestionChrono(minutes, secondes);
             
         }
         else if(reset == 1){   //Si la partie est renitialisée
@@ -213,14 +213,41 @@ public class MainView extends JFrame {
             /*  Definition objet pour la serialisation  */
             this.grilleSeria = grille;
             this.scoreSeria = score;
-            this.chronoSeria = chrono;
+            this.gestionChronoSeria = new GestionChrono(minutes, secondes);
         }
         else if(reset == -1){
-            System.out.println("aeeahe");
+            System.out.println("Chargement....");
             for(int j = 0; j < height; j++){
                 for(int i =0; i < width; i++){
-                    grille.getCase(i, j).regenerer();
+                    grilleSeria.getCase(i, j).regenerer(grille.getCase(i, j));
                 }
+            }
+            
+            if(scoreParam != null){
+                this.scoreSeria.addObserver(this.scoreLab);
+                this.scoreSeria.setPoints(scoreParam.getPoints());
+                GestionAgregation.setScore(this.scoreSeria);
+            }
+            else{
+                Score score = new Score();
+                score.addObserver(this.scoreLab);
+                score.setPoints(0);
+                GestionAgregation.setScore(score);
+            }
+            
+            if(gestionChronoParam != null){
+                Chrono chrono = new Chrono(minutes, secondes);
+                chrono.addObserver(this.chronoLab);
+                chrono.setChrono(gestionChronoParam.getMinuteChrono(), gestionChronoParam.getSecondeChrono());
+                GestionChrono.setChrono(chrono);
+                GestionChrono.setDebutChrono(1);
+            }
+            else{
+                Chrono chrono = new Chrono(minutes, secondes);
+                chrono.addObserver(this.chronoLab);
+                chrono.setChrono(minutes, secondes);
+                GestionChrono.setChrono(chrono);
+                GestionChrono.setDebutChrono(1);  
             }
             
             System.out.println("grille apres chargement : " + grille);
@@ -229,15 +256,22 @@ public class MainView extends JFrame {
     
     public void chargementSeria() throws FileNotFoundException{
         ObjectInputStream oisGrille = null;
+        ObjectInputStream oisScore = null;
+        ObjectInputStream oisGestionChrono = null;
         Grille grille = null;
+        Score score = null;
+        GestionChrono gestionChrono = null;
         
         try{
             final FileInputStream fichierGrille = new FileInputStream("grille.serial");
+            final FileInputStream fichierScore = new FileInputStream("score.serial");
+            final FileInputStream fichierGestionChrono = new FileInputStream("gestionChrono.serial");
             oisGrille = new ObjectInputStream(fichierGrille);
+            oisScore = new ObjectInputStream(fichierScore);
+            oisGestionChrono = new ObjectInputStream(fichierGestionChrono);
             grille = (Grille) oisGrille.readObject();
-                     
-            this.grilleSeria = grille;            
-            System.out.println("Grille chargée  : " + this.grilleSeria);
+            score = (Score) oisScore.readObject();
+            gestionChrono = (GestionChrono) oisGestionChrono.readObject();
         }
         catch(final java.io.IOException e){
              e.printStackTrace();
@@ -250,30 +284,58 @@ public class MainView extends JFrame {
               if (oisGrille != null) {
                 oisGrille.close();
               }
+              if(oisScore != null){
+                oisScore.close();
+              }
+              if(oisGestionChrono != null){
+                  oisGestionChrono.close();
+              }
             }
             catch (final IOException ex) {
               ex.printStackTrace();
             }
         }
-        
-        System.out.println("Partie chargée ! ");
+       
         if(grille != null){
-            initialisation(this.width, this.height, this.grilleSeria, this.jpGrille, new GestionDeLaGrille(this.grilleSeria, minutes, secondes), -1);
+            initialisation(this.width, this.height, grille, this.jpGrille, new GestionDeLaGrille(grille, minutes, secondes), -1, score, gestionChrono);
         }
+        System.out.println("Grille chargée  : " + grille);
+        System.out.println("Score chargé : " + score.getPoints());
+        System.out.println("Chrono chargé : " + gestionChrono.getChrono());
+        System.out.println("Partie chargée ! ");
     }
     
     public void sauvegargerSeria() throws FileNotFoundException, IOException{
         Grille grille1 = this.grilleSeria;
+        Score score1 = this.scoreSeria;
+        GestionChrono gestionChrono1 = this.gestionChronoSeria;
+        gestionChrono1.setChronoParam();
+        
         ObjectOutputStream oosGrille = null;
+        ObjectOutputStream oosScore = null;
+        ObjectOutputStream oosGestionChrono = null;
+        
         System.out.println("Grille avant seria  : " + grille1);
+        System.out.println("Score avant seria : " + score1.getPoints());
+        System.out.println("Chrono avant seria : " + gestionChrono1.getChrono());
         try {
             final FileOutputStream fosGrille = new FileOutputStream("grille.serial");
+            final FileOutputStream fosScore = new FileOutputStream("score.serial");
+            final FileOutputStream fosGestionChrono = new FileOutputStream("gestionChrono.serial");
+            
             oosGrille = new ObjectOutputStream(fosGrille);
+            oosScore = new ObjectOutputStream(fosScore);
+            oosGestionChrono = new ObjectOutputStream(fosGestionChrono);
+            
             // Ecriture dans le flux de sortie
             oosGrille.writeObject(grille1);
+            oosScore.writeObject(score1);
+            oosGestionChrono.writeObject(gestionChrono1);
 
             // Vide le tampon
             oosGrille.flush();
+            oosScore.flush();
+            oosGestionChrono.flush();
 
         } 
         catch (final java.io.IOException e) {
@@ -283,7 +345,12 @@ public class MainView extends JFrame {
             try {
                 if(oosGrille != null){
                     oosGrille.close();
-                    oosGrille.close();
+                }
+                if(oosScore != null){
+                    oosScore.close();
+                }
+                if(oosGestionChrono != null){
+                    oosGestionChrono.close();
                 }
             }
             catch (final IOException ex) {

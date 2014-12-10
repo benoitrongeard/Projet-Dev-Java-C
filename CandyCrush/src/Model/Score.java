@@ -5,13 +5,14 @@
  */
 package Model;
 
+import java.io.Serializable;
 import java.util.Observable;
 
 /**
  *
  * @author Sylvio
  */
-public class Score extends Observable{
+public class Score extends Observable implements Serializable{
     private int points;
     
     public Score() {

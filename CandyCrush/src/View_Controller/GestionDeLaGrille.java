@@ -59,23 +59,6 @@ public class GestionDeLaGrille implements MouseListener{
                     
                     GestionAgregation gestionAgregation = new GestionAgregation(maCase1, false); //False pour dire que ce n'est pas l'initialisation
                     gestionAgregation.testCase(maCase2);
-                    
-                    /*Forme formeTmp = maCase1.getForme();
-                    maCase1.setForme(maCase2.getForme());
-                    maCase2.setForme(formeTmp);
-
-                    int pointsAdd = maCase1.aggregation();
-                    pointsAdd +=  maCase2.aggregation();
-
-                    if(pointsAdd > 0){
-                        point += pointsAdd;
-                        maCase1.changeForme(maCase1.getForme());
-                        maCase2.changeForme(maCase2.getForme());
-                    }
-                    else{
-                        maCase2.changeForme(maCase1.getForme());
-                        maCase1.changeForme(formeTmp);
-                    }*/
 
                     this.caseSelected.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
                     caseSelected = null;
