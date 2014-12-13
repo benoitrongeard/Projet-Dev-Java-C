@@ -45,7 +45,7 @@ public class Grille implements Serializable{
     }
     
     @Override
-    public String toString(){
+    public String toString(){   //Permet d'afficher la grille avec les couleurs
         String chaine = "";
         for(int j = 0; j < this.y; j++){
             for(int i = 0; i < this.x; i++){

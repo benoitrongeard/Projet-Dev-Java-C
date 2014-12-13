@@ -20,7 +20,7 @@ public class ScoreLab extends JLabel implements Observer{
     }
     
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, Object arg) {  //Permet de mettre à jour le label du score
         if(o instanceof Score){
             Score score = (Score)o;
             if(score.getPoints() == 0){

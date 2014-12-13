@@ -23,7 +23,7 @@ public class GestionAgregation extends java.lang.Thread{
     public static boolean modifG = false; // True si l'utilisateur marque des point (modifie la grille)
     private static Score score = null;
     private final Case maCase;
-    private static boolean init;
+    private static boolean init;    //Il nous sert pour ne pas compter le score si c'est l'initialisation de la grille.
     private static Set<Integer> setColumnToUpdGrav = Collections.synchronizedSet(new HashSet());
     
     public GestionAgregation(Case maCase, boolean init){
@@ -49,7 +49,7 @@ public class GestionAgregation extends java.lang.Thread{
     
     public static synchronized void decrementThread(Case c){
         nombreDeThread--;
-        if(nombreDeThread == 0){
+        if(nombreDeThread == 0){    //c'est le dernier thread qui lance tous les thread gravite
             for (Integer it: setColumnToUpdGrav) {
                 if(init == true){
                     new GestionDeLaGravite(it, c.getGrille(), init).start();
@@ -62,7 +62,7 @@ public class GestionAgregation extends java.lang.Thread{
         }
     }
     
-    public boolean testCase(Case maCase2){
+    public boolean testCase(Case maCase2){  //Permet de vérifier si l'agregation a pu être faite
         incrementThread();
         incrementThread();
         boolean compatible = false;
@@ -81,7 +81,7 @@ public class GestionAgregation extends java.lang.Thread{
             this.maCase.changeForme(this.maCase.getForme());
             maCase2.changeForme(maCase2.getForme());
         }
-        else{
+        else{   //Si agregation pas possible on intervertit pas les cases 
             maCase2.changeForme(this.maCase.getForme());
             this.maCase.changeForme(formeTmp);
         }
@@ -163,7 +163,7 @@ public class GestionAgregation extends java.lang.Thread{
                 
                 if((nbCaseDroite + nbCaseGauche + 1) >= 3){
                     for(int i = maCase.getX() - nbCaseGauche; i < (maCase.getX() + nbCaseDroite+1); i++){
-                        maGrille.getCase(i, maCase.getY()).setForme(null);
+                        maGrille.getCase(i, maCase.getY()).setForme(null);  //Nous permet de supprimer la case
                     }
                     point += (nbCaseDroite + nbCaseGauche) - 1;
                     System.out.println("largeur : " +   point);
@@ -174,7 +174,7 @@ public class GestionAgregation extends java.lang.Thread{
                 }
                 if((nbCaseHaut + nbCaseBas + 1) >= 3){
                     for(int i = maCase.getY() - nbCaseHaut; i < (maCase.getY() + nbCaseBas+1); i++){
-                        maGrille.getCase(maCase.getX(), i).setForme(null);
+                        maGrille.getCase(maCase.getX(), i).setForme(null);  //Nous permet de supprimer la case
                     }
                     point += (nbCaseHaut + nbCaseBas) - 1;
                     System.out.println("hauteur : " +   point);
@@ -182,7 +182,7 @@ public class GestionAgregation extends java.lang.Thread{
 
                 if(point > 0){
                     GestionAgregation.addPoints(point);
-                    setColumnToUpdGrav.add(maCase.getX());
+                    setColumnToUpdGrav.add(maCase.getX());  //On stock les cases dans le vecteur pour après appeler gravité sur chaque case
                     for(int j = maCase.getX() - nbCaseGauche; j < (maCase.getX() + nbCaseDroite + 1); j++){
                         if(j != maCase.getX()){
                             setColumnToUpdGrav.add(j);
@@ -191,11 +191,11 @@ public class GestionAgregation extends java.lang.Thread{
                 }
             }
         }
-        return point;
+        return point;   //On retourne le nombre de point pour tester si l'agregation a pu être faite dans la methode testCase
     }
     
     @Override
-    public void run(){
+    public void run(){  //Permet de lancer le thread
         incrementThread();
         agregation(maCase);
         decrementThread(maCase);

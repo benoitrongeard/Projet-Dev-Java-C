@@ -22,7 +22,7 @@ public class ChronoLab extends JLabel implements Observer{
     }
     
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, Object arg) {  //Permet de mettre à jour le label du chronomètre
         if(o instanceof Chrono){
             Chrono chrono = (Chrono)o;
             

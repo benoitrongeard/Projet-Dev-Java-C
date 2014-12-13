@@ -17,7 +17,7 @@ public class Forme implements Serializable{
     private Color c;
     private int numColor;
     
-    public Forme(int numeroAleatoire){
+    public Forme(int numeroAleatoire){  //Génère une couleur aleatoire en fonction du nombre
         switch(numeroAleatoire){
             case 0: this.c = Color.blue;
                 this.numColor = 0;
@@ -45,7 +45,7 @@ public class Forme implements Serializable{
         return c;
     }
     
-    public boolean equals(Forme forme){
+    public boolean equals(Forme forme){ //Permet de comparer 2 formes
         if(forme == null){
             return false;
         }

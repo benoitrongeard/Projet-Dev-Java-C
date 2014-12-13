@@ -35,7 +35,7 @@ public class CaseGrille extends JPanel implements Observer{
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, Object arg) {  //Permet de mettre à jour la couleur de la case
         if(o instanceof Case){
             Case maCase = (Case)o;
             if(maCase.getForme() != null){

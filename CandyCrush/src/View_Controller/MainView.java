@@ -91,11 +91,11 @@ public class MainView extends JFrame {
         jpGrille = new JPanel(new GridLayout(height,width));
         jpGrille.setPreferredSize(new Dimension(500,500));
         grilleSeria = new Grille(height, width);
-        initialisation(width, height, grilleSeria, jpGrille, new GestionDeLaGrille(grilleSeria,this.minutes, this.secondes), 0, null, null);
+        initialisation(width, height, grilleSeria, jpGrille, new GestionDeLaGrille(grilleSeria,this.minutes, this.secondes), 0, null, null); //Paramètre 0 pour pas initialisation et paramètre null pour score et chrono
         
         
         /*  --------- Gestion affichage --------- */
-        GroupLayout groupeLayout = new GroupLayout(this.getContentPane());
+        GroupLayout groupeLayout = new GroupLayout(this.getContentPane());  //Permet de positionner la grille et le panel ou il y a le score et le timer
         this.setLayout(groupeLayout);
         groupeLayout.setHorizontalGroup(
                 groupeLayout.createSequentialGroup()
@@ -111,16 +111,16 @@ public class MainView extends JFrame {
         
         
         /*  --------- Action sur le menu --------- */
-        nouvellePartie.addActionListener(new ActionListener() {
+        nouvellePartie.addActionListener(new ActionListener() { //Action pour créer une nouvelle partie
             boolean reset = true;
             @Override
             public void actionPerformed(ActionEvent e) {
-                initialisation(width, height, grilleSeria, jpGrille, new GestionDeLaGrille(grilleSeria, minutes, secondes), 1, null, null);
+                initialisation(width, height, grilleSeria, jpGrille, new GestionDeLaGrille(grilleSeria, minutes, secondes), 1, null, null); //Paramètre 1 pour initialisation et paramètre null pour score et chrono
                 System.out.println("Partie renitialisée");
             }
         });
         
-        sauegarderPartie.addActionListener(new ActionListener() {
+        sauegarderPartie.addActionListener(new ActionListener() { //Action pour sauvegarder une partie
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -132,7 +132,7 @@ public class MainView extends JFrame {
             }
         });
         
-        chargerPartie.addActionListener(new ActionListener() {
+        chargerPartie.addActionListener(new ActionListener() {  //Action pour charger une partie
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -215,7 +215,7 @@ public class MainView extends JFrame {
             this.scoreSeria = score;
             this.chronoSeria = chrono;
         }
-        else if(reset == -1){
+        else if(reset == -1){   //Si on charge la partie
             System.out.println("Chargement....");
             for(int j = 0; j < height; j++){
                 for(int i =0; i < width; i++){
@@ -253,7 +253,7 @@ public class MainView extends JFrame {
         }
     }
     
-    public void chargementSeria() throws FileNotFoundException{
+    public void chargementSeria() throws FileNotFoundException{ //Permet de charger une partie sauvegardée
         ObjectInputStream oisGrille = null;
         ObjectInputStream oisScore = null;
         ObjectInputStream oisChrono = null;
@@ -304,7 +304,7 @@ public class MainView extends JFrame {
         System.out.println("Partie chargée ! ");
     }
     
-    public void sauvegargerSeria() throws FileNotFoundException, IOException{
+    public void sauvegargerSeria() throws FileNotFoundException, IOException{   //Permet de sauvegarder une partie
         Grille grille1 = this.grilleSeria;
         Score score1 = this.scoreSeria;
         Chrono chrono1 = this.chronoSeria;

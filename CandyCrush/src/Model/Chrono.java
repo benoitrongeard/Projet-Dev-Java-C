@@ -48,7 +48,7 @@ public class Chrono extends Observable implements ActionListener, Serializable{
     }
     
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {    //Decompte le chrono
         if (this.timeSeconde != -1 || this.timeMinute != 0){    //-1 pour afficher le 0
             if (this.timeSeconde == 0) {
                 this.timeMinute--;
@@ -78,7 +78,7 @@ public class Chrono extends Observable implements ActionListener, Serializable{
     
     
     @Override
-    public String toString(){
+    public String toString(){   //Permet d'afficher le chrono
         return "Temps : " + this.timeMinute + " : " + this.timeSeconde;
     }
     

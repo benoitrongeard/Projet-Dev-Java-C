@@ -36,7 +36,7 @@ public class GestionDeLaGrille implements MouseListener{
     public void mouseReleased(MouseEvent e) {
         CaseGrille maCaseGrille = (CaseGrille) e.getSource();
         GestionChrono gestionChrono = new GestionChrono(this.minute, this.seconde);
-        if(gestionChrono.getChrono().getPartieTerminee() == false){
+        if(gestionChrono.getChrono().getPartieTerminee() == false){ //Permet de savoir si la partie est terminée
             if(departChrono == 0){
                 GestionChrono.setDebutChrono(1);
                 departChrono = 1;
@@ -57,7 +57,7 @@ public class GestionDeLaGrille implements MouseListener{
                     Case maCase2 = maGrille.getCase(maCaseGrille.x, maCaseGrille.y);
                     
                     GestionAgregation gestionAgregation = new GestionAgregation(maCase1, false); //False pour dire que ce n'est pas l'initialisation
-                    gestionAgregation.testCase(maCase2);
+                    gestionAgregation.testCase(maCase2);    //Intervertit pas les cases si l'agregation n'est pas possible
 
                     this.caseSelected.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
                     caseSelected = null;
@@ -81,7 +81,7 @@ public class GestionDeLaGrille implements MouseListener{
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent e) {    //Permet de colorier les bordures au passage de la souris
         CaseGrille maCaseGrille = (CaseGrille) e.getSource();
         if(maCaseGrille != caseSelected){
             maCaseGrille.setBorder(BorderFactory.createLineBorder(Color.white, 2));
@@ -89,7 +89,7 @@ public class GestionDeLaGrille implements MouseListener{
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent e) { //Permet de remettre la couleur de base quand la souris quitte la case
         if(e.getSource() != this.caseSelected){
             CaseGrille maCaseGrille = (CaseGrille) e.getSource();
             maCaseGrille.setBorder(BorderFactory.createLineBorder(Color.black, 2));

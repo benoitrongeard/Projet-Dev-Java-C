@@ -53,17 +53,17 @@ public class GestionChrono extends java.lang.Thread{
     }
     
     @Override
-    public void run(){
+    public void run(){  //Permet de lancer un nouveau thread qui appelle Timer, avec le chronomètre
         timer = new Timer(1000, chrono);
         timer.start();
         int minuteEnSeconde = this.minutes * 60;
         int totalSeconde = minuteEnSeconde + this.secondes;
-        int totalMilliseconde = totalSeconde * 1000 + 1000;
+        int totalMilliseconde = totalSeconde * 1000 + 1000; //On calcul le temps exacte pour endormir le thread pendant que le timer s'execute et décompte
         //System.out.println("MinuteEnSeconde : " + minuteEnSeconde + " et total seconde : " + totalSeconde);
 
         try 
         {
-          Thread.sleep(totalMilliseconde); //Gérer le temps de mise en veille du thread (convertir les minutes+ secondes en microseconde  pour avoir un temps exacte)
+          Thread.sleep(totalMilliseconde); 
         } catch (InterruptedException e) 
         {
             Logger.getLogger(GestionChrono.class.getName()).log(Level.SEVERE, null, e);

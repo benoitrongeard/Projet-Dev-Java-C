@@ -24,7 +24,7 @@ public class GestionDeLaGravite extends java.lang.Thread{
     private static Set<Case> setCaseMajAgreg = Collections.synchronizedSet(new HashSet());
     private Grille grille;
     private int numColonne = 0;
-    private static boolean init;
+    private static boolean init; //Il nous sert pour ne pas compter le score si c'est l'initialisation de la grille.
     
     public GestionDeLaGravite(int numColonne, Grille grille, boolean init){
         this.numColonne = numColonne;

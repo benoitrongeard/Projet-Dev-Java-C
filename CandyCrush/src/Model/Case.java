@@ -10,9 +10,6 @@ import java.awt.Color;
 import java.io.Serializable;
 import java.util.Observable;
 
-
-
-
 /**
  *
  * @author Neo
@@ -21,7 +18,6 @@ import java.util.Observable;
 public class Case extends Observable implements Serializable{
     
     private final int x,y;
-    private boolean selected,marked;
     private int nombreAlea;
     public Grille maGrille;
     private Forme maForme;
@@ -29,8 +25,6 @@ public class Case extends Observable implements Serializable{
     public Case(int x, int y, Grille g) {
         this.x = x;
         this.y = y;
-        this.selected = false;
-        this.marked = false;
         nombreAlea = Tool.monRandom(0, 3);
         maForme = new Forme(nombreAlea);
         this.maGrille = g;
@@ -44,7 +38,7 @@ public class Case extends Observable implements Serializable{
         notifyObservers();
     }
     
-    public void regenerer(Case maCase){
+    public void regenerer(Case maCase){ //Permet de regénerer une couleur en fonction d'une autre case
         this.maForme = maCase.getForme();
         setChanged();   //A faire pour prévenir l'observer avant d'appliquer notify
         notifyObservers();
@@ -60,26 +54,6 @@ public class Case extends Observable implements Serializable{
 
     public Grille getGrille(){
         return this.maGrille;
-    }
-    
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(){
-        if(this.isSelected()){
-            this.selected = false;
-        }
-        else{
-            this.selected = true;
-        }
-        setChanged();
-        notifyObservers();
-    }
-    
-    
-    public boolean isMarked() {
-        return marked;
     }
     
     public Forme getForme(){
@@ -107,11 +81,11 @@ public class Case extends Observable implements Serializable{
         return this.maForme.getForme();
     }
     
-    public boolean equals(Case c){
+    public boolean equals(Case c){  //Pour comparer des cases
         return this.maForme.equals(c.getForme());
     }
     
-    public int aggregation(boolean init){
+    public int aggregation(boolean init){ //Agregation pour l'initialisation
         if(this.getForme() != null){
             new GestionAgregation(this, init).start();
         }

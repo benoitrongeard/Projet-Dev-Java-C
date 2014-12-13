@@ -36,7 +36,7 @@ public class Score extends Observable implements Serializable{
     }
     
     
-    public String toString(boolean scoreNull){
+    public String toString(boolean scoreNull){ 
         //Permet d'afficher le score
         if(scoreNull == true){
             return "Score : " + 0;
