@@ -26,13 +26,21 @@ public class ChronoLab extends JLabel implements Observer{
         if(o instanceof Chrono){
             Chrono chrono = (Chrono)o;
             
-            if(chrono.getTimeMinute() <= 5 && chrono.getTimeSeconde() <= 5){
+            if(chrono.getTimeMinute() == 0 && chrono.getTimeSeconde() <= 5){
                 this.setText(chrono.toString()); 
-                this.setForeground(Color.red);
+                this.setForeground(Color.red); 
             }
             else{
-                this.setText(chrono.toString());  
-                this.setForeground(Color.black);
+                if(chrono.getTimeMinute() < 0){
+                    chrono.setChronoNull();
+                    chrono.setPartieTerminee();
+                    this.setText(chrono.toString()); 
+                    this.setForeground(Color.red);
+                }
+                else{
+                    this.setText(chrono.toString());  
+                    this.setForeground(Color.black); 
+                }
             }       
         }
     }    

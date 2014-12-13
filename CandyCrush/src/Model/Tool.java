@@ -14,6 +14,7 @@ import java.util.Random;
 public class Tool {
  
     public static int monRandom(int min, int max){
+        //fonction pour générer un nombre aleatoire (utilise pour generer la forme)
         Random rand = new Random();
         return rand.nextInt(max - min + 1) + min;
     }

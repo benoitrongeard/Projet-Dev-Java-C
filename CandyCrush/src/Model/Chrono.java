@@ -29,6 +29,10 @@ public class Chrono extends Observable implements ActionListener, Serializable{
     public boolean getPartieTerminee(){
         return this.partieTermine;
     }
+    
+    public void setPartieTerminee(){
+        this.partieTermine = true;
+    }
 
     public int getTimeMinute() {
         return timeMinute;
@@ -36,6 +40,11 @@ public class Chrono extends Observable implements ActionListener, Serializable{
 
     public int getTimeSeconde() {
         return timeSeconde;
+    }
+    
+    public void setChronoNull(){
+        this.timeMinute = 0;
+        this.timeSeconde = 0;
     }
     
     @Override
@@ -48,7 +57,9 @@ public class Chrono extends Observable implements ActionListener, Serializable{
             else{
                 this.timeSeconde--;
             }
-            System.out.println("Temps restant : " + this.timeMinute + " : " + this.timeSeconde);
+            if(this.partieTermine == false){
+                System.out.println("Temps restant : " + this.timeMinute + " : " + this.timeSeconde);
+            }
             if(this.timeSeconde == 0 && this.timeMinute == 0){
                 System.out.println("Temps écoulé, partie terminée !!"); //Met fin à la partie
                 this.partieTermine = true;
